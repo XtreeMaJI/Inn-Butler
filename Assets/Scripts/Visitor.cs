@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Visitor : MonoBehaviour
 {
-    
+    public Room CurRoom;
 }
