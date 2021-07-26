@@ -14,27 +14,19 @@ public class PlayerController : MonoBehaviour
 
     public float speed;
 
-    public Stairs ActiveStair; //Лестница, в проходе которой находится персонаж
-
     public UI ui;
 
     void Start()
     {
         _rb = this.GetComponent<Rigidbody2D>();
 
-        this.transform.position = new Vector3(0.5f, 0f, -1f);
-
-        ActiveStair = null;
+        this.transform.position = new Vector3(1f, 0f, -1f);
     }
 
     void Update()
     {
         float dir = Input.GetAxis("Horizontal");
         _rb.transform.Translate(new Vector3(dir*speed*Time.deltaTime, 0f, 0f));
-
-        
-
-
 
         change_cam_pos();
     }

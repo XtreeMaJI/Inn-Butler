@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class Stairs : MonoBehaviour
+public class Stairs : Room
 {
     //Лестницы, соединённые с текущей
     public Stairs UpperStair;
@@ -10,14 +12,37 @@ public class Stairs : MonoBehaviour
 
     public Vector3 MidPos; //Середина лестницы
 
+    private LevelManager LM;
+
+    private GameObject _UpB;
+    private GameObject _DownB;
+
+    private GameObject _Can;
+
+    private GameObject _PlayerBuf; //Заносим сюда персонажа игрока, пока он стоит в проходе
+
     private void Start()
     {
+        _Can = transform.Find("Canvas").gameObject;
+        _UpB = _Can.transform.Find("ArrowUp").gameObject;
+        _DownB = _Can.transform.Find("ArrowDown").gameObject;
+
+        _Can.GetComponent<Canvas>().worldCamera = Camera.main;
+
         UpperStair = null;
         LowerStair = null;
+
+        _PlayerBuf = null;
 
         MidPos = transform.position;
 
         connect_stairs();
+    }
+
+    public void init(LevelManager NewLM)
+    {
+        LM = NewLM;
+        MidPos.y -= LM.RoomHeight / 2;
     }
 
     //Проверяем, есть ли сверху и снизу другие лестницы и соединяем, если есть 
@@ -44,14 +69,26 @@ public class Stairs : MonoBehaviour
         }
     }
 
+    public void press_arrow_button()
+    {
+        string ButtonName = EventSystem.current.currentSelectedGameObject.name;
+        if(ButtonName == "ArrowUp")
+        {
+            climb_up(_PlayerBuf);
+        }
+        {
+            climb_down(_PlayerBuf);
+        }
+    }
+
     public void climb_up(GameObject Person)
     {
         if (UpperStair != null)
         {
             Person.transform.SetPositionAndRotation(UpperStair.MidPos, new Quaternion());
-            if(Person.tag == "Player")
+            if (Person.tag == "Player")
             {
-                Person.GetComponent<PlayerController>().ActiveStair = UpperStair;
+                _PlayerBuf = null;
             }
         }
     }
@@ -63,7 +100,7 @@ public class Stairs : MonoBehaviour
             Person.transform.SetPositionAndRotation(LowerStair.MidPos, new Quaternion());
             if (Person.tag == "Player")
             {
-                Person.GetComponent<PlayerController>().ActiveStair = LowerStair;
+                _PlayerBuf = null;
             }
         }
     }
@@ -72,9 +109,8 @@ public class Stairs : MonoBehaviour
     {
         if(collision.tag == "Player")
         {
-            PlayerController controller = collision.GetComponent<PlayerController>();
-            controller.ActiveStair = GetComponent<Stairs>();
-            controller.ui.toggle_arrows();
+            _PlayerBuf = collision.gameObject;
+            toggle_buttons();
         }
     }
 
@@ -82,12 +118,22 @@ public class Stairs : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            PlayerController controller = collision.GetComponent<PlayerController>();
-            if (controller.ActiveStair == GetComponent<Stairs>())
-            {
-                controller.ActiveStair = null;
-            }
-            controller.ui.toggle_arrows();
+            _PlayerBuf = null;
+            toggle_buttons();
+        }
+    }
+
+    private void toggle_buttons()
+    {
+        if(_UpB.activeSelf)
+        {
+            _UpB.SetActive(false);
+            _DownB.SetActive(false);
+        }
+        else
+        {
+            _UpB.SetActive(true);
+            _DownB.SetActive(true);
         }
     }
 

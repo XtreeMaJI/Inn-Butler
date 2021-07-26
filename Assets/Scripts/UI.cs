@@ -5,51 +5,52 @@ using UnityEngine.UI;
 
 public class UI : MonoBehaviour
 {
+    private RoomBlock RoomBlockInst;
     public PlayerController Controller;
 
+    public LevelManager LM;
+
     private GameObject _MainPanel;
+    private GameObject _BuildPanel;
 
-    private Button _UpB;
-    private Button _DownB;
+    public GameObject ContentPanel; //Скроллящийся фон на _BuildPanel
 
-    private void Start()
+    public GameObject FirstAddB {private set; get;}
+    public GameObject SecondAddB {private set; get;}
+    public GameObject ThirdAddB { private set; get; }
+    public GameObject FourthAddB { private set; get; }
+
+    private void Awake()
     {
         _MainPanel = transform.Find("MainPanel").gameObject;
-        _UpB = _MainPanel.transform.Find("UpButton").GetComponent<Button>();
-        _DownB = _MainPanel.transform.Find("DownButton").GetComponent<Button>();
+        _BuildPanel = transform.Find("BuildPanel").gameObject;
+
+        ContentPanel = _BuildPanel.transform.Find("Content").gameObject;
+
+        FirstAddB = ContentPanel.transform.Find("FirstAddButton").gameObject;
+        SecondAddB = ContentPanel.transform.Find("SecondAddButton").gameObject;
+        ThirdAddB = ContentPanel.transform.Find("ThirdAddButton").gameObject;
+        FourthAddB = ContentPanel.transform.Find("FourthAddButton").gameObject;
     }
 
-    //Показать/скрыть стрелки "вверх" и "вниз"
-    public void toggle_arrows()
+    //Открыть меню строительства новых комнат
+    public void open_BuildPanel()
     {
-        if(_UpB.gameObject.activeSelf)
-        {
-            _UpB.gameObject.SetActive(false);
-            _DownB.gameObject.SetActive(false);
-        }
-        else
-        {
-            _UpB.gameObject.SetActive(true);
-            _DownB.gameObject.SetActive(true);
-        }
+        disable_all_panels();
+        _BuildPanel.SetActive(true);
     }
 
-    public void UpB_pressed()
+    public void open_MainPanel()
     {
-        Stairs stair = Controller.ActiveStair;
-        if (stair != null)
-        {
-            stair.climb_up(Controller.gameObject);
-        }
+        disable_all_panels();
+        _MainPanel.SetActive(true);
     }
 
-    public void DownB_pressed()
+    //Сделать неактивными все панели, привязанные к UI
+    private void disable_all_panels()
     {
-        Stairs stair = Controller.ActiveStair;
-        if (stair != null)
-        {
-            stair.climb_down(Controller.gameObject);
-        }
+        _MainPanel.SetActive(false);
+        _BuildPanel.SetActive(false);
     }
 
 }
