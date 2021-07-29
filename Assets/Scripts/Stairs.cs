@@ -17,17 +17,12 @@ public class Stairs : Room
     private GameObject _UpB;
     private GameObject _DownB;
 
-    private GameObject _Can;
-
     private GameObject _PlayerBuf; //Заносим сюда персонажа игрока, пока он стоит в проходе
 
     private void Start()
     {
-        _Can = transform.Find("Canvas").gameObject;
         _UpB = _Can.transform.Find("ArrowUp").gameObject;
         _DownB = _Can.transform.Find("ArrowDown").gameObject;
-
-        _Can.GetComponent<Canvas>().worldCamera = Camera.main;
 
         UpperStair = null;
         LowerStair = null;
@@ -37,12 +32,6 @@ public class Stairs : Room
         MidPos = transform.position;
 
         connect_stairs();
-    }
-
-    public void init(LevelManager NewLM)
-    {
-        LM = NewLM;
-        MidPos.y -= LM.RoomHeight / 2;
     }
 
     //Проверяем, есть ли сверху и снизу другие лестницы и соединяем, если есть 
@@ -76,6 +65,7 @@ public class Stairs : Room
         {
             climb_up(_PlayerBuf);
         }
+        else
         {
             climb_down(_PlayerBuf);
         }
@@ -89,6 +79,7 @@ public class Stairs : Room
             if (Person.tag == "Player")
             {
                 _PlayerBuf = null;
+                _PC = null;
             }
         }
     }
@@ -101,24 +92,27 @@ public class Stairs : Room
             if (Person.tag == "Player")
             {
                 _PlayerBuf = null;
+                _PC = null;
             }
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private new void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
             _PlayerBuf = collision.gameObject;
+            _PC = collision.GetComponent<PlayerController>();
             toggle_buttons();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private new void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
             _PlayerBuf = null;
+            _PC = null;
             toggle_buttons();
         }
     }
@@ -129,11 +123,13 @@ public class Stairs : Room
         {
             _UpB.SetActive(false);
             _DownB.SetActive(false);
+            _HammerB.gameObject.SetActive(false);
         }
         else
         {
             _UpB.SetActive(true);
             _DownB.SetActive(true);
+            _HammerB.gameObject.SetActive(true);
         }
     }
 

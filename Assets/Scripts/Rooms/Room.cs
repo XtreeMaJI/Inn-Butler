@@ -17,18 +17,69 @@ public class Room : MonoBehaviour
 
     public Visitor Vis;
 
-    private Canvas _Can;
-    private Button _HammerB;
+    protected Canvas _Can;
+    protected Button _HammerB;
 
-    private void Start()
+    protected PlayerController _PC;
+
+    public LevelManager.TypeOfRoom RoomType;
+    public LevelManager.PosInRoomTable PosInTable;
+
+    protected void Awake()
     {
+        configure_RoomType();
         _Can = transform.Find("Canvas").GetComponent<Canvas>();
         _HammerB = _Can.transform.Find("HammerB").GetComponent<Button>();
-
         _Can.worldCamera = Camera.main;
+        _PC = null;
     }
 
-    private void toggle_button()
+    private void configure_RoomType()
+    {
+        if(this.GetComponent<Bedroom>())
+        {
+            RoomType = LevelManager.TypeOfRoom.Bedroom;
+            return;
+        }
+        if (this.GetComponent<CheapRoom>())
+        {
+            RoomType = LevelManager.TypeOfRoom.CheapRoom;
+            return;
+        }
+        if (this.GetComponent<StandartRoom>())
+        {
+            RoomType = LevelManager.TypeOfRoom.StandartRoom;
+            return;
+        }
+        if (this.GetComponent<ComfortableRoom>())
+        {
+            RoomType = LevelManager.TypeOfRoom.ComfortableRoom;
+            return;
+        }
+        if (this.GetComponent<TraderRoom>())
+        {
+            RoomType = LevelManager.TypeOfRoom.TraderRoom;
+            return;
+        }
+        if (this.GetComponent<StaffRoom>())
+        {
+            RoomType = LevelManager.TypeOfRoom.StaffRoom;
+            return;
+        }
+        if (this.GetComponent<Hall>())
+        {
+            RoomType = LevelManager.TypeOfRoom.Hall;
+            return;
+        }
+        if (this.GetComponent<Stairs>())
+        {
+            RoomType = LevelManager.TypeOfRoom.Stairs;
+            return;
+        }
+        RoomType = LevelManager.TypeOfRoom.Room;
+    }
+
+    protected void toggle_button()
     {
         if(_HammerB.gameObject.activeSelf)
         {
@@ -40,21 +91,30 @@ public class Room : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
+            _PC = collision.GetComponent<PlayerController>();
             toggle_button();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
+            _PC = null;
             toggle_button();
         }
     }
+
+    public void press_upgrade_button()
+    {
+        if(_PC != null)
+        {
+            _PC.ui.open_UpgradePanel(this.gameObject);
+        }
+    }
+
 }
-
-

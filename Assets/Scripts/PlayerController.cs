@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     public GameObject cam; //Главная камера
     
     private Rigidbody2D _rb;
-    private Transform _trans; //Трансформ игрока
 
     public float speed;
 

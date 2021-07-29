@@ -4,6 +4,31 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    public enum TypeOfRoom: int
+    {
+        None = 0,
+        Room = 1,
+        Stairs = 2,
+        Bedroom = 3,
+        CheapRoom = 4,
+        StandartRoom = 5,
+        ComfortableRoom = 6,
+        TraderRoom = 7,
+        StaffRoom = 8,
+        Hall = 9
+    }
+
+    public struct PosInRoomTable
+    {
+        int floor;
+        int NumOfRoom;
+        public PosInRoomTable(int NewFloor, int NewNum)
+        {
+            floor = NewFloor;
+            NumOfRoom = NewNum;
+        }
+    }
+
     //Высоту и ширину комнаты устанавливаем в CreateLevel
     public float RoomWidth;
     public float RoomHeight;
@@ -19,6 +44,12 @@ public class LevelManager : MonoBehaviour
 
     public Room RoomInst;
     public RoomBlock RoomBlockInst;
+    public Stairs StairsInst;
+    public Bedroom BedroomInst;
+    public CheapRoom CheapRoomInst;
+    public StandartRoom StandartRoomInst;
+    public ComfortableRoom ComfortableRoomInst;
+    public TraderRoom TraderRoomInst;
 
     private int[,] RoomTable;
 
@@ -67,8 +98,9 @@ public class LevelManager : MonoBehaviour
         RoomPos.x = CurrentRoom * RoomWidth;
         RoomPos.y = (floor - 1) * RoomHeight;
         RoomPos.z = 0;
-        Instantiate(RoomInst, RoomPos, new Quaternion());
-        RoomTable[floor-1, CurrentRoom] = 1;
+        Room NewRoom = Instantiate(RoomInst, RoomPos, new Quaternion());
+        RoomTable[floor-1, CurrentRoom] = (int)NewRoom.RoomType;
+        NewRoom.PosInTable = new PosInRoomTable(floor - 1, CurrentRoom);
     }
 
     //Получить количество комнат на выбранном этаже
@@ -77,20 +109,53 @@ public class LevelManager : MonoBehaviour
         int NumOfRooms = 0;
         for(int i = 0; i<MaxRoomsOnFloor; i++)
         {
-            NumOfRooms += RoomTable[floor - 1, i];
+            if (RoomTable[floor - 1, i] != (int)TypeOfRoom.None)
+            {
+                NumOfRooms += 1;
+            }
         }
         return NumOfRooms;
     }
 
     //Улучшить выбранную комнату до выбранного уровня 
-    public void upgrade_room(Room SelectedRoom, string Upgrade)
+    public Room upgrade_room(Room SelectedRoom, TypeOfRoom Upgrade)
     {
-        switch(Upgrade)
+        Vector3 Pos = SelectedRoom.transform.position;
+        PosInRoomTable PosInTableBuf = SelectedRoom.PosInTable;
+        Room RoomBuf;
+        Destroy(SelectedRoom.gameObject);
+        switch (Upgrade)
         {
-            case "Stairs":
-                SelectedRoom = new Stairs();
-                break;
+            case TypeOfRoom.Stairs:
+                RoomBuf = Instantiate(StairsInst, Pos, new Quaternion());
+                RoomBuf.PosInTable = PosInTableBuf;
+                return RoomBuf;
+            case TypeOfRoom.Bedroom:
+                RoomBuf = Instantiate(BedroomInst, Pos, new Quaternion());
+                RoomBuf.PosInTable = PosInTableBuf;
+                return RoomBuf;
+            case TypeOfRoom.Room:
+                RoomBuf = Instantiate(RoomInst, Pos, new Quaternion());
+                RoomBuf.PosInTable = PosInTableBuf;
+                return RoomBuf;
+            case TypeOfRoom.CheapRoom:
+                RoomBuf = Instantiate(CheapRoomInst, Pos, new Quaternion());
+                RoomBuf.PosInTable = PosInTableBuf;
+                return RoomBuf;
+            case TypeOfRoom.StandartRoom:
+                RoomBuf = Instantiate(StandartRoomInst, Pos, new Quaternion());
+                RoomBuf.PosInTable = PosInTableBuf;
+                return RoomBuf;
+            case TypeOfRoom.ComfortableRoom:
+                RoomBuf = Instantiate(ComfortableRoomInst, Pos, new Quaternion());
+                RoomBuf.PosInTable = PosInTableBuf;
+                return RoomBuf;
+            case TypeOfRoom.TraderRoom:
+                RoomBuf = Instantiate(TraderRoomInst, Pos, new Quaternion());
+                RoomBuf.PosInTable = PosInTableBuf;
+                return RoomBuf;
         }
+        return SelectedRoom;
     }
 
 }

@@ -69,6 +69,7 @@ GameObject:
   - component: {fileID: 6288927708002978322}
   - component: {fileID: 3245740490447230029}
   - component: {fileID: 6155100621914631948}
+  - component: {fileID: -2689942680769370579}
   m_Layer: 0
   m_Name: StandartRoom
   m_TagString: Untagged
@@ -129,7 +130,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -281694911
-  m_SortingLayer: 5
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 5e367d23275378f43befb53cc8c70e59, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -194,6 +195,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.33222437, y: 0.3582037}
   m_EdgeRadius: 0
+--- !u!114 &-2689942680769370579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118857154121914158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fab575b71b7e4140b6f42d4aceeffaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Clean: 0
+  Food: 0
+  Fun: 0
+  MaxClean: 0
+  MaxFood: 0
+  MaxFun: 0
+  Vis: {fileID: 0}
 --- !u!1 &6457228179545788710
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,7 +331,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 478207163801790706}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -2689942680769370579}
+        m_MethodName: press_upgrade_button
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7080302213197623370
 GameObject:
   m_ObjectHideFlags: 0

@@ -25,14 +25,15 @@ public class CreateLevel : MonoBehaviour
         _LM.add_room(1);
         _LM.add_room(2);
         _LM.add_room(2);
-        /*Vector3 RoomPos = new Vector3(0f, 0f, 0f);
-        Instantiate(RoomInst, RoomPos, new Quaternion());
-        RoomPos.Set(0f, RoomHeight, 0f);
-        Instantiate(RoomInst, RoomPos, new Quaternion());
-        RoomPos.Set(RoomWidth, 0f, 0f);
-        Instantiate(StairsInst, RoomPos, new Quaternion()).init(_LM);
-        RoomPos.Set(RoomWidth, RoomHeight, 0f);
-        Instantiate(StairsInst, RoomPos, new Quaternion()).init(_LM);*/
+        //Две из них делаем лестницами
+        Room[] StartingListOfRooms = FindObjectsOfType<Room>();
+        foreach(Room room in StartingListOfRooms)
+        {
+            if(room.transform.position.x == 2 * RoomWidth)
+            {
+                _LM.upgrade_room(room, LevelManager.TypeOfRoom.Stairs);
+            }
+        }
 
     }
 

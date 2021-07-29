@@ -117,7 +117,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5036546606471200215}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -5626690640615835988}
+        m_MethodName: press_upgrade_button
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2379536453250557295
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +358,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -281694911
-  m_SortingLayer: 5
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 5b6eeebb45a3823408f27879d0027a9c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
