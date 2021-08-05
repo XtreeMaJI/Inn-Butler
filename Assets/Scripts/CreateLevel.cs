@@ -21,19 +21,12 @@ public class CreateLevel : MonoBehaviour
         _LM.RoomWidth = RoomWidth;
 
         //Создаём первые 4 комнаты
+        _LM.upgrade_room(_LM.add_room(0), LevelManager.TypeOfRoom.Room);
+        _LM.add_room(0);
+        _LM.upgrade_room(_LM.add_room(0), LevelManager.TypeOfRoom.StandartRoom);
+        _LM.upgrade_room(_LM.add_room(1), LevelManager.TypeOfRoom.Room);
         _LM.add_room(1);
-        _LM.add_room(1);
-        _LM.add_room(2);
-        _LM.add_room(2);
-        //Две из них делаем лестницами
-        Room[] StartingListOfRooms = FindObjectsOfType<Room>();
-        foreach(Room room in StartingListOfRooms)
-        {
-            if(room.transform.position.x == 2 * RoomWidth)
-            {
-                _LM.upgrade_room(room, LevelManager.TypeOfRoom.Stairs);
-            }
-        }
+        _LM.upgrade_room(_LM.add_room(1), LevelManager.TypeOfRoom.StandartRoom);
 
     }
 

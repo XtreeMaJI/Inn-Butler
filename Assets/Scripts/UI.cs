@@ -29,6 +29,9 @@ public class UI : MonoBehaviour
     private GameObject _HallB;
     private GameObject _DestroyUpgradesB;
 
+    //Сообщение о невозможности удаления единственной лестницы
+    private GameObject _DestrWarn;
+
     private Room _RoomBuf; //Буфер для комнаты, с которой взаимодействуем
 
     private void Awake()
@@ -49,6 +52,8 @@ public class UI : MonoBehaviour
         _StaffRoomB = _UpgradePanel.transform.Find("StaffRoomButton").gameObject;
         _HallB = _UpgradePanel.transform.Find("HallButton").gameObject;
         _DestroyUpgradesB = _UpgradePanel.transform.Find("DestroyUpgradesButton").gameObject;
+
+        _DestrWarn = _UpgradePanel.transform.Find("DestroyWarning").gameObject;
 
         _RoomBuf = null;
     }
@@ -116,6 +121,13 @@ public class UI : MonoBehaviour
                 _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Hall);
                 break;
             case "DestroyUpgradesButton":
+                //Если команта - это единственная лестница на этаже, то на даём удалить её
+                if(_RoomBuf.RoomType == LevelManager.TypeOfRoom.Stairs &&
+                   LM.get_rooms_count_of_type_on_floor(LevelManager.TypeOfRoom.Stairs, _RoomBuf.PosInTable.floor) == 1)
+                {
+                    StartCoroutine("show_DestrWarn");
+                    break;
+                }
                 _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Room);
                 break;
             case "LevelUpButton":
@@ -195,6 +207,16 @@ public class UI : MonoBehaviour
         _UpgradePanel.SetActive(false);
     }
 
-    
+    public void handle_build_panel_button_press(int floor)
+    {
+        LM.add_room(floor);
+    }
+
+    IEnumerator show_DestrWarn()
+    {
+        _DestrWarn.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        _DestrWarn.SetActive(false);
+    }
 
 }

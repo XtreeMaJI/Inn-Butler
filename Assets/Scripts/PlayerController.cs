@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     {
         _rb = this.GetComponent<Rigidbody2D>();
 
-        this.transform.position = new Vector3(1f, 0f, -1f);
+        this.transform.position = new Vector3(0f, 0f, -1f);
     }
 
     void Update()
