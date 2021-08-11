@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Room : MonoBehaviour
+public class Room : BaseType
 {
     //Текущие параметры для комнаты
     public float Clean;
@@ -18,42 +18,25 @@ public class Room : MonoBehaviour
     public Visitor Vis;
 
     protected Canvas _Can;
-    protected Button _HammerB;
+    protected GameObject _HammerB;
 
     protected PlayerController _PC;
 
     public LevelManager.TypeOfRoom RoomType;
     public LevelManager.PosInRoomTable PosInTable;
 
-    private GameObject InfoPanel;
-    private Image CleanBar;
-    private Image FoodBar;
-    private Image FunBar;
-
-    protected void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         init_Room();
         _Can = transform.Find("Canvas").GetComponent<Canvas>();
-        _HammerB = _Can.transform.Find("HammerB").GetComponent<Button>();
+        if (RoomType != LevelManager.TypeOfRoom.Reception)
+        {
+            _HammerB = _Can.transform.Find("HammerB").gameObject;
+        }
         _Can.worldCamera = Camera.main;
         _PC = null;
         Vis = null;
-        init_InfoPanel();
-    }
-
-    private void init_InfoPanel()
-    {
-        if (RoomType == LevelManager.TypeOfRoom.Bedroom ||
-            RoomType == LevelManager.TypeOfRoom.CheapRoom ||
-            RoomType == LevelManager.TypeOfRoom.StandartRoom ||
-            RoomType == LevelManager.TypeOfRoom.ComfortableRoom ||
-            RoomType == LevelManager.TypeOfRoom.TraderRoom)
-        {
-            InfoPanel = _Can.transform.Find("InfoPanel").gameObject;
-            CleanBar = InfoPanel.transform.Find("CleanBar").GetComponent<Image>();
-            FoodBar = InfoPanel.transform.Find("FoodBar").GetComponent<Image>();
-            FunBar = InfoPanel.transform.Find("FunBar").GetComponent<Image>();
-        }
     }
 
     protected void decrease_bars()
@@ -62,11 +45,6 @@ public class Room : MonoBehaviour
         {
 
         }
-    }
-
-    protected void Update()
-    {
-        
     }
 
     private void init_Room()
@@ -116,18 +94,28 @@ public class Room : MonoBehaviour
             RoomType = LevelManager.TypeOfRoom.Stairs;
             return;
         }
+        if (this.GetComponent<Kitchen>())
+        {
+            RoomType = LevelManager.TypeOfRoom.Kitchen;
+            return;
+        }
+        if (this.GetComponent<Reception>())
+        {
+            RoomType = LevelManager.TypeOfRoom.Reception;
+            return;
+        }
         RoomType = LevelManager.TypeOfRoom.Room;
     }
 
-    protected void toggle_button()
+    protected void toggle_buttons()
     {
-        if(_HammerB.gameObject.activeSelf)
+        if (_HammerB.activeSelf)
         {
-            _HammerB.gameObject.SetActive(false);
+            _HammerB.SetActive(false);
         }
         else
         {
-            _HammerB.gameObject.SetActive(true);
+            _HammerB.SetActive(true);
         }
     }
 
@@ -136,7 +124,11 @@ public class Room : MonoBehaviour
         if(collision.tag == "Player")
         {
             _PC = collision.GetComponent<PlayerController>();
-            toggle_button();
+            toggle_buttons();
+        }
+        else if (collision.tag == "Character")
+        {
+            collision.GetComponent<BaseCharacter>().RoomBuf = this;
         }
     }
 
@@ -144,8 +136,12 @@ public class Room : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
+            toggle_buttons();
             _PC = null;
-            toggle_button();
+        }
+        else if (collision.tag == "Character")
+        {
+            collision.GetComponent<BaseCharacter>().RoomBuf = null;
         }
     }
 
@@ -179,6 +175,6 @@ public class Room : MonoBehaviour
             return true;
         }
         return false;
-    }
+    } 
 
 }

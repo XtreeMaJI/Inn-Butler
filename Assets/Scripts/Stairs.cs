@@ -76,10 +76,15 @@ public class Stairs : Room
         if (UpperStair != null)
         {
             Person.transform.SetPositionAndRotation(UpperStair.MidPos, new Quaternion());
+            Person.GetComponent<BaseType>().CurFloor = UpperStair.CurFloor;
             if (Person.tag == "Player")
             {
                 _PlayerBuf = null;
                 _PC = null;
+            }
+            else if (Person.tag == "Character")
+            {
+                Person.GetComponent<BaseCharacter>().RoomBuf = UpperStair;
             }
         }
     }
@@ -89,10 +94,15 @@ public class Stairs : Room
         if (LowerStair != null)
         {
             Person.transform.SetPositionAndRotation(LowerStair.MidPos, new Quaternion());
+            Person.GetComponent<BaseType>().CurFloor = LowerStair.CurFloor;
             if (Person.tag == "Player")
             {
                 _PlayerBuf = null;
                 _PC = null;
+            }
+            else if (Person.tag == "Character")
+            {
+                Person.GetComponent<BaseCharacter>().RoomBuf = LowerStair;
             }
         }
     }
@@ -105,6 +115,10 @@ public class Stairs : Room
             _PC = collision.GetComponent<PlayerController>();
             toggle_buttons();
         }
+        else if (collision.tag == "Character")
+        {
+            collision.GetComponent<BaseCharacter>().RoomBuf = this;
+        }
     }
 
     private new void OnTriggerExit2D(Collider2D collision)
@@ -115,9 +129,13 @@ public class Stairs : Room
             _PC = null;
             toggle_buttons();
         }
+        else if (collision.tag == "Character")
+        {
+            collision.GetComponent<BaseCharacter>().RoomBuf = null;
+        }
     }
 
-    private void toggle_buttons()
+    private new void toggle_buttons()
     {
         if(_UpB.activeSelf)
         {

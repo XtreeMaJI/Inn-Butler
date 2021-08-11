@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bedroom : Room
+public class Bedroom : LivingRoom
 {
     
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Citizen : Visitor
+public class Kitchen : Room
 {
-
+    
 }

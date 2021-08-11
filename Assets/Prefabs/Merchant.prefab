@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 4718951445988885161}
   - component: {fileID: 7043766212391694441}
   - component: {fileID: 6292217663374994432}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Merchant
-  m_TagString: Player
+  m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,3 +133,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a4cb1fc6c0353498ac9ec10f591e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurFloor: 0
+  CurRoom: {fileID: 0}
+  GlobalTarget: {fileID: 0}
+  LocalTarget: {fileID: 0}
+  RoomBuf: {fileID: 0}
+  CharacterState: 0
+  Speed: 1
+  LeaseTerm: 0

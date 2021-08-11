@@ -2340,6 +2340,10 @@ MonoBehaviour:
     type: 3}
   TraderRoomInst: {fileID: -2905053148966846212, guid: ef64b1a12d69fc942b49d7facd7a9b78,
     type: 3}
+  KitchenInst: {fileID: 3196687521467952155, guid: 4634ff45a64c2e84380b9d6b62fce82a,
+    type: 3}
+  ReceptionInst: {fileID: 6242452500877175396, guid: 10f6a24487c8afe46906b05d56753d85,
+    type: 3}
   RepSelf: 0
   RepSameTown: 0
   RepSecondTown: 0
@@ -2351,6 +2355,7 @@ MonoBehaviour:
     type: 3}
   MerchantInst: {fileID: 6292217663374994432, guid: 6c5dc0f4dda49ed4d9d10e6f6cac5a55,
     type: 3}
+  VisInQueue: {fileID: 0}
 --- !u!114 &1534110995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3446,7 +3451,7 @@ GameObject:
   - component: {fileID: 2016775249}
   - component: {fileID: 2016775251}
   - component: {fileID: 2016775250}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -3529,9 +3534,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4229585cd064bd469166d917ab2bb52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurFloor: 0
   cam: {fileID: 519420028}
   speed: 1
   ui: {fileID: 1955488374}
+  FollowingVisitor: {fileID: 0}
 --- !u!70 &2016775250
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

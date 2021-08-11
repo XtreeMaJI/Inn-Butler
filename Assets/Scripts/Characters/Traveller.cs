@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Traveller : MonoBehaviour
+public class Traveller : Visitor
 {
-    private void Start()
-    {
-        
-    }
+
 }

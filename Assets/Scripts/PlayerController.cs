@@ -5,7 +5,7 @@ using UnityEngine;
 
 /*Обрабатываем нажатия клавиш, передаём параметры в аниматор и привязываем камеру к игроку*/
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseType
 {
     public GameObject cam; //Главная камера
     
@@ -15,11 +15,15 @@ public class PlayerController : MonoBehaviour
 
     public UI ui;
 
+    public Visitor FollowingVisitor;
+
     void Start()
     {
         _rb = this.GetComponent<Rigidbody2D>();
 
-        this.transform.position = new Vector3(0f, 0f, -1f);
+        this.transform.position = new Vector3(-0.75f, 0f, -1f);
+
+        FollowingVisitor = null;
     }
 
     void Update()

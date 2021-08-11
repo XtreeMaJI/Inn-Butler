@@ -15,7 +15,9 @@ public class LevelManager : MonoBehaviour
         ComfortableRoom = 6,
         TraderRoom = 7,
         StaffRoom = 8,
-        Hall = 9
+        Hall = 9,
+        Reception = 10,
+        Kitchen = 11
     }
 
     public enum TypeOfVisitor : int
@@ -67,6 +69,8 @@ public class LevelManager : MonoBehaviour
     public StandartRoom StandartRoomInst;
     public ComfortableRoom ComfortableRoomInst;
     public TraderRoom TraderRoomInst;
+    public Kitchen KitchenInst;
+    public Reception ReceptionInst;
 
     private int[,] RoomTable; 
 
@@ -86,6 +90,9 @@ public class LevelManager : MonoBehaviour
 
     private List<Room> _RoomList;
 
+    private int _DailyAmountOfVisitors; //Максимальное количество посетителей, которые могут прийти за день
+    public Visitor VisInQueue; //Посетитель у ресепшена
+
     private void Awake()
     {
         RoomTable = new int[NumOfFloors, MaxRoomsOnFloor];
@@ -102,7 +109,7 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         init_taverns();
-        StartCoroutine("distribute_visitors");
+        //StartCoroutine("distribute_visitors");
     }
 
     //Добавить комнату на выбранный этаж
@@ -143,11 +150,12 @@ public class LevelManager : MonoBehaviour
         NewRoom.PosInTable = new PosInRoomTable(floor, CurrentRoom);
         //Если это первая комната на этаже, то сразу делаем её лестницей
         int NumOfStairsOnFloor = get_rooms_count_of_type_on_floor(TypeOfRoom.Stairs, floor);
+        _RoomList.Add(NewRoom);
         if (NumOfStairsOnFloor == 0)
         {
             NewRoom = upgrade_room(NewRoom, TypeOfRoom.Stairs);
         }
-        _RoomList.Add(NewRoom);
+        NewRoom.CurFloor = floor;
         return NewRoom;
     }
 
@@ -201,10 +209,17 @@ public class LevelManager : MonoBehaviour
             case TypeOfRoom.TraderRoom:
                 RoomBuf = Instantiate(TraderRoomInst, Pos, new Quaternion());
                 break;
+            case TypeOfRoom.Kitchen:
+                RoomBuf = Instantiate(KitchenInst, Pos, new Quaternion());
+                break;
+            case TypeOfRoom.Reception:
+                RoomBuf = Instantiate(ReceptionInst, Pos, new Quaternion());
+                break;
         }
         RoomBuf.PosInTable = PosInTableBuf;
         RoomTable[PosInTableBuf.floor, PosInTableBuf.NumOfRoom] = (int)RoomBuf.RoomType;
         _RoomList.Add(RoomBuf);
+        RoomBuf.CurFloor = PosInTableBuf.floor;
         return RoomBuf;
     }
 
@@ -250,18 +265,19 @@ public class LevelManager : MonoBehaviour
     {
         yield return new WaitForSeconds(DayLength); 
         increace_TavernsRep();
-        int AmountOfVisitors = _TotalNumOfVisitors * RepSelf / (RepSelf + RepSameTown + RepSecondTown + RepThirdTown + RepFourthTown);
-        if(AmountOfVisitors < 3)
+        _DailyAmountOfVisitors = _TotalNumOfVisitors * RepSelf / (RepSelf + RepSameTown + RepSecondTown + RepThirdTown + RepFourthTown);
+        if(_DailyAmountOfVisitors < 3)
         {
-            AmountOfVisitors = 3;
+            _DailyAmountOfVisitors = 3;
         }
-        StartCoroutine("create_visitors", AmountOfVisitors);
+        create_visitor_if_possible();
         StartCoroutine("distribute_visitors");
     }
 
-    //Создаём посетителей в зависимости от количества комнат, для каждого типа посетителей
-    IEnumerator create_visitors(int AmountOfVisitors)
+    //Создаём посетителя в зависимости от количества комнат, для каждого типа посетителей
+    public void create_visitor()
     {
+        _DailyAmountOfVisitors--;
         int NumOfRoomsForTravellers = get_num_of_rooms_in_tavern_for_TypeOfVisitor(TypeOfVisitor.Traveller);
         int NumOfRoomsForCitizens = get_num_of_rooms_in_tavern_for_TypeOfVisitor(TypeOfVisitor.Citizen);
         int NumOfRoomsForMerchants = get_num_of_rooms_in_tavern_for_TypeOfVisitor(TypeOfVisitor.Merchant);
@@ -278,30 +294,36 @@ public class LevelManager : MonoBehaviour
             MerchantSpawnChance = NumOfRoomsForMerchants / NumOfLivingRooms;
         }
 
-        for (int i = 0; i < AmountOfVisitors; i++)
+        float RandomNum = Random.Range(0f, 1f);
+        if (RandomNum < TravellerSpawnChance)
         {
-            yield return new WaitForSeconds(Random.Range(1, 5));
-            float RandomNum = Random.Range(0f, 1f);
-            if (RandomNum < TravellerSpawnChance)
-            {
-                Instantiate(TravellerInst, _VistorSpawnPos, new Quaternion());
-            }
-            else if (RandomNum > TravellerSpawnChance &&
-                RandomNum <= TravellerSpawnChance + CitizenSpawnChance)
-            {
-                Instantiate(CitizenInst, _VistorSpawnPos, new Quaternion());
-            }
-            else if(RandomNum > TravellerSpawnChance + CitizenSpawnChance)
-            {
-                Instantiate(MerchantInst, _VistorSpawnPos, new Quaternion());
-            }
+            VisInQueue = Instantiate(TravellerInst, _VistorSpawnPos, new Quaternion());
+        }
+        else if (RandomNum > TravellerSpawnChance &&
+            RandomNum <= TravellerSpawnChance + CitizenSpawnChance)
+        {
+            VisInQueue = Instantiate(CitizenInst, _VistorSpawnPos, new Quaternion());
+        }
+        else if(RandomNum > TravellerSpawnChance + CitizenSpawnChance)
+        {
+            VisInQueue = Instantiate(MerchantInst, _VistorSpawnPos, new Quaternion());
+        }
+    }
+
+    //Проверяем, выполняются ли условия для создания нового посетителя и создаём
+    public void create_visitor_if_possible()
+    {
+        if(_DailyAmountOfVisitors > 0 && VisInQueue == null)
+        {
+            create_visitor();
         }
     }
 
     private int get_num_of_rooms_in_tavern_for_TypeOfVisitor(TypeOfVisitor VisitorType)
     {
         int NumOfSuitableRooms = 0;
-        foreach(Room room in _RoomList)
+        List<Room> RoomListBuf = new List<Room>(_RoomList);
+        foreach (Room room in RoomListBuf)
         {
             if (room.is_Suitable_for_TypeOfVisitor(VisitorType))
             {
@@ -311,4 +333,17 @@ public class LevelManager : MonoBehaviour
         return NumOfSuitableRooms;
     }
 
+    public List<Stairs> get_all_stairs_on_floor(int floor)
+    {
+        List<Stairs> StairList = new List<Stairs>();
+        List<Room> RoomListBuf = new List<Room>(_RoomList);
+        foreach (Room room in RoomListBuf)
+        {
+            if(room.CurFloor == floor && room.RoomType == TypeOfRoom.Stairs)
+            {
+                StairList.Add(room as Stairs);
+            }
+        }
+        return StairList;
+    }
 }
