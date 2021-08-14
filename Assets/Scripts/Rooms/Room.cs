@@ -37,46 +37,42 @@ public class Room : BaseType
         _Can.worldCamera = Camera.main;
         _PC = null;
         Vis = null;
-    }
-
-    protected void decrease_bars()
-    {
-        if(Vis != null)
-        {
-
-        }
-    }
+    } 
 
     private void init_Room()
     {
         if (this.GetComponent<Bedroom>())
         {
             RoomType = LevelManager.TypeOfRoom.Bedroom;
-            MaxClean = LevelManager.DayLength*0.1f;
+            MaxClean = 1f;
             return;
         }
         if (this.GetComponent<CheapRoom>())
         {
             RoomType = LevelManager.TypeOfRoom.CheapRoom;
-            MaxClean = LevelManager.DayLength * 0.2f;
+            MaxClean = 2f;
             return;
         }
         if (this.GetComponent<StandartRoom>())
         {
             RoomType = LevelManager.TypeOfRoom.StandartRoom;
-            MaxClean = LevelManager.DayLength * 0.4f;
+            MaxClean = 4f;
+            MaxFood = 1f;
             return;
         }
         if (this.GetComponent<ComfortableRoom>())
         {
             RoomType = LevelManager.TypeOfRoom.ComfortableRoom;
-            MaxClean = LevelManager.DayLength * 0.8f;
+            MaxClean = 8f;
+            MaxFood = 2f;
             return;
         }
         if (this.GetComponent<TraderRoom>())
         {
             RoomType = LevelManager.TypeOfRoom.TraderRoom;
-            MaxClean = LevelManager.DayLength * 1.6f;
+            MaxClean = 16f;
+            MaxFood = 3f;
+            MaxFun = 1f;
             return;
         }
         if (this.GetComponent<StaffRoom>())

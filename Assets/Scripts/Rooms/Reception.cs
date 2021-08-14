@@ -19,10 +19,14 @@ public class Reception : Room
     //Проводить посетителя к комнате
     public void take_visitor_to_room()
     {
-        VisitorBuf.change_state(BaseCharacter.StateOfCharacter.FollowPerson, _PlayerBuf);
-        _LM.VisInQueue = null;
-        _LM.create_visitor_if_possible();
-        _PlayerBuf.GetComponent<PlayerController>().FollowingVisitor = VisitorBuf;
+        if (VisitorBuf != null && 
+            (_PlayerBuf != null && _PlayerBuf.GetComponent<PlayerController>().FollowingVisitor == null))
+        {
+            VisitorBuf.change_state(BaseCharacter.StateOfCharacter.FollowPerson, _PlayerBuf);
+            _LM.VisInQueue = null;
+            _LM.create_visitor_if_possible();
+            _PlayerBuf.GetComponent<PlayerController>().FollowingVisitor = VisitorBuf;
+        }
     }
 
     private new void toggle_buttons()

@@ -15,7 +15,7 @@ public class PlayerController : BaseType
 
     public UI ui;
 
-    public Visitor FollowingVisitor;
+    public Visitor FollowingVisitor { get; set; }
 
     void Start()
     {

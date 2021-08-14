@@ -98,8 +98,11 @@ public class BaseCharacter : BaseType
         }
         else
         {
-            float dir = (LocalTarget.transform.position.x - transform.position.x) / Mathf.Abs(LocalTarget.transform.position.x - transform.position.x);
-            _rb.transform.Translate(new Vector3(dir * Speed * Time.deltaTime, 0f, 0f));
+            if (LocalTarget.transform.position.x - transform.position.x != 0)
+            {
+                float dir = (LocalTarget.transform.position.x - transform.position.x) / Mathf.Abs(LocalTarget.transform.position.x - transform.position.x);
+                _rb.transform.Translate(new Vector3(dir * Speed * Time.deltaTime, 0f, 0f));
+            }
         }
     }
 
@@ -128,7 +131,11 @@ public class BaseCharacter : BaseType
         }
         else
         {
-            float dir = (LocalTarget.transform.position.x - transform.position.x) / Mathf.Abs(LocalTarget.transform.position.x - transform.position.x);
+            float dir = 0f;
+            if (LocalTarget.transform.position.x - transform.position.x != 0)
+            {
+                dir = (LocalTarget.transform.position.x - transform.position.x) / Mathf.Abs(LocalTarget.transform.position.x - transform.position.x);
+            }
             _rb.transform.Translate(new Vector3(dir * Speed * Time.deltaTime, 0f, 0f));
         }
     }

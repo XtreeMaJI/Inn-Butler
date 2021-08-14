@@ -82,7 +82,7 @@ public class LevelManager : MonoBehaviour
     public int RepFourthTown;
 
     private int _TotalNumOfVisitors = 100; //Общее ежедневное число путешественников
-    private Vector3 _VistorSpawnPos = new Vector3(0, 0, 0);
+    private Vector3 _VistorSpawnPos = new Vector3(0f, 0f, 0f);
 
     public Traveller TravellerInst;
     public Citizen CitizenInst;
@@ -109,7 +109,7 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         init_taverns();
-        //StartCoroutine("distribute_visitors");
+        StartCoroutine("distribute_visitors");
     }
 
     //Добавить комнату на выбранный этаж

@@ -37,22 +37,27 @@ public class Stairs : Room
     //Проверяем, есть ли сверху и снизу другие лестницы и соединяем, если есть 
     void connect_stairs()
     {
-        Stairs[] ListOfStairs = FindObjectsOfType<Stairs>();
-        float x = this.transform.position.x;
-        float y = this.transform.position.y;
-        foreach (Stairs stair in ListOfStairs)
+        if (CurFloor != 0)
         {
-            if(stair.transform.position.x == x)
+            List<Stairs> ListOfDownStairs = _LM.get_all_stairs_on_floor(CurFloor - 1);
+            foreach (Stairs stair in ListOfDownStairs)
             {
-                if(stair.transform.position.y > y)
+                if (stair.PosInTable.NumOfRoom == PosInTable.NumOfRoom)
                 {
-                    UpperStair = stair;
-                    stair.LowerStair = this.GetComponent<Stairs>();
-                }
-                else if(stair.transform.position.y < y)
-                {
+                    stair.UpperStair = this;
                     LowerStair = stair;
-                    stair.UpperStair = this.GetComponent<Stairs>();
+                }
+            }
+        }
+        if(CurFloor < LevelManager.NumOfFloors - 1)
+        {
+            List<Stairs> ListOfTopStairs = _LM.get_all_stairs_on_floor(CurFloor + 1);
+            foreach (Stairs stair in ListOfTopStairs)
+            {
+                if (stair.PosInTable.NumOfRoom == PosInTable.NumOfRoom)
+                {
+                    stair.LowerStair = this;
+                    UpperStair = stair;
                 }
             }
         }

@@ -20,7 +20,24 @@ public class Visitor : BaseCharacter
     {
         Reception Rec = Object.FindObjectOfType<Reception>();
         change_state(StateOfCharacter.MoveToReception, Rec);
-
+        init_Visitor();
     }
+
+    private void init_Visitor()
+    {
+        if(GetComponent<Traveller>() != null)
+        {
+            VisitorType = LevelManager.TypeOfVisitor.Traveller;
+        }
+        if (GetComponent<Citizen>() != null)
+        {
+            VisitorType = LevelManager.TypeOfVisitor.Citizen;
+        }
+        if(GetComponent<Merchant>() != null)
+        {
+            VisitorType = LevelManager.TypeOfVisitor.Merchant;
+        }
+    }
+
 
 }
