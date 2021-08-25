@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StaffRoom : MonoBehaviour
+public class StaffRoom : BaseWorkerRoom
 {
- 
+
 }

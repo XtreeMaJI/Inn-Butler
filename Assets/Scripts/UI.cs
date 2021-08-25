@@ -13,6 +13,12 @@ public class UI : MonoBehaviour
     private GameObject _MainPanel;
     private GameObject _BuildPanel;
     private GameObject _UpgradePanel;
+    private GameObject _AddStaffPanel;
+
+    //Панели для разных комнат на StaffPanel
+    private GameObject _AddStaffKitchenPanel;
+    private GameObject _AddStaffStaffRoomPanel;
+    private GameObject _AddStaffReceptionPanel;
 
     public GameObject ContentPanel; //Скроллящийся фон на _BuildPanel
 
@@ -27,6 +33,7 @@ public class UI : MonoBehaviour
     private GameObject _StairsB;
     private GameObject _StaffRoomB;
     private GameObject _HallB;
+    private GameObject _KitchenB;
     private GameObject _DestroyUpgradesB;
 
     //Сообщение о невозможности удаления единственной лестницы
@@ -51,9 +58,15 @@ public class UI : MonoBehaviour
         _StairsB = _UpgradePanel.transform.Find("StairsButton").gameObject;
         _StaffRoomB = _UpgradePanel.transform.Find("StaffRoomButton").gameObject;
         _HallB = _UpgradePanel.transform.Find("HallButton").gameObject;
+        _KitchenB = _UpgradePanel.transform.Find("KitchenButton").gameObject;
         _DestroyUpgradesB = _UpgradePanel.transform.Find("DestroyUpgradesButton").gameObject;
 
         _DestrWarn = _UpgradePanel.transform.Find("DestroyWarning").gameObject;
+
+        _AddStaffPanel = transform.Find("AddStaffPanel").gameObject;
+        _AddStaffKitchenPanel = _AddStaffPanel.transform.Find("KitchenPanel").gameObject;
+        _AddStaffStaffRoomPanel = _AddStaffPanel.transform.Find("StaffRoomPanel").gameObject;
+        _AddStaffReceptionPanel = _AddStaffPanel.transform.Find("ReceptionPanel").gameObject;
 
         _RoomBuf = null;
     }
@@ -82,27 +95,65 @@ public class UI : MonoBehaviour
     public void configure_UpgradePanel(GameObject SelectedRoom)
     {
         disable_upgrade_panel_buttons();
-        if (SelectedRoom.GetComponent<Room>().RoomType == LevelManager.TypeOfRoom.Room)
+        _RoomBuf = SelectedRoom.GetComponent<Room>();
+
+        if(_RoomBuf == null)
+        {
+            return;
+        }
+
+        if (_RoomBuf.RoomType == LevelManager.TypeOfRoom.Room)
         {
             _LevelUpB.SetActive(true);
             _StairsB.SetActive(true);
             _HallB.SetActive(true);
             _StaffRoomB.SetActive(true);
-            _RoomBuf = SelectedRoom.GetComponent<Room>();
+            _KitchenB.SetActive(true);
             return;
         }
-        if (SelectedRoom.GetComponent<Stairs>() ||
-            SelectedRoom.GetComponent<Hall>() ||
-            SelectedRoom.GetComponent<StaffRoom>())
+        if (_RoomBuf.RoomType == LevelManager.TypeOfRoom.Stairs ||
+            _RoomBuf.RoomType == LevelManager.TypeOfRoom.Hall ||
+            _RoomBuf.RoomType == LevelManager.TypeOfRoom.StaffRoom ||
+            _RoomBuf.RoomType == LevelManager.TypeOfRoom.Kitchen)
         {
             _DestroyUpgradesB.SetActive(true);
-            _RoomBuf = SelectedRoom.GetComponent<Stairs>();
             return;
         }
+
+        //Если комната относится к типу LivingRoom
         _LevelUpB.SetActive(true);
         _LevelDownB.SetActive(true);
         _DestroyUpgradesB.SetActive(true);
         _RoomBuf = SelectedRoom.GetComponent<Room>();
+    }
+
+    public void open_AddStaffPanel(LevelManager.TypeOfRoom CurrentRoomType)
+    {
+        disable_all_panels();
+        configure_AddStaffPanel(CurrentRoomType);
+        _AddStaffPanel.SetActive(true);
+    }
+
+    private void configure_AddStaffPanel(LevelManager.TypeOfRoom CurrentRoomType)
+    {
+        disable_AddStaffPanel_buttons();
+        if(CurrentRoomType == LevelManager.TypeOfRoom.Kitchen)
+        {
+            _AddStaffKitchenPanel.SetActive(true);
+            return;
+        }
+
+        if (CurrentRoomType == LevelManager.TypeOfRoom.StaffRoom)
+        {
+            _AddStaffStaffRoomPanel.SetActive(true);
+            return;
+        }
+
+        if (CurrentRoomType == LevelManager.TypeOfRoom.Reception)
+        {
+            _AddStaffReceptionPanel.SetActive(true);
+            return;
+        }
     }
 
     //Обаботчик нажатия кнопок с панели апгрейдов
@@ -120,9 +171,12 @@ public class UI : MonoBehaviour
             case "HallButton":
                 _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Hall);
                 break;
+            case "KitchenButton":
+                _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Kitchen);
+                break;
             case "DestroyUpgradesButton":
                 //Если команта - это единственная лестница на этаже, то на даём удалить её
-                if(_RoomBuf.RoomType == LevelManager.TypeOfRoom.Stairs &&
+                if (_RoomBuf.RoomType == LevelManager.TypeOfRoom.Stairs &&
                    LM.get_rooms_count_of_type_on_floor(LevelManager.TypeOfRoom.Stairs, _RoomBuf.PosInTable.floor) == 1)
                 {
                     StartCoroutine("show_DestrWarn");
@@ -196,7 +250,15 @@ public class UI : MonoBehaviour
         _StaffRoomB.SetActive(false);
         _StairsB.SetActive(false);
         _HallB.SetActive(false);
+        _KitchenB.SetActive(false);
         _DestroyUpgradesB.SetActive(false);
+    }
+
+    private void disable_AddStaffPanel_buttons()
+    {
+        _AddStaffKitchenPanel.SetActive(false);
+        _AddStaffStaffRoomPanel.SetActive(false);
+        _AddStaffReceptionPanel.SetActive(false);
     }
 
     //Сделать неактивными все панели, привязанные к UI
@@ -205,6 +267,7 @@ public class UI : MonoBehaviour
         _MainPanel.SetActive(false);
         _BuildPanel.SetActive(false);
         _UpgradePanel.SetActive(false);
+        _AddStaffPanel.SetActive(false);
     }
 
     public void handle_build_panel_button_press(int floor)

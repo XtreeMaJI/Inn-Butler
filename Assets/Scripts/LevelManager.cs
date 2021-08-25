@@ -58,6 +58,8 @@ public class LevelManager : MonoBehaviour
     public const int FourthTownTavernMaxRep = 6000;
     public const float DayLength = 4f; //Длина дня в секундах
     public const int NumOfTaverns = 5;
+    public const float BaseMaxClean = 1f; //Показатель максимально возможной чистоты в самой дешёвой комнате
+    public const float PlayerCleanMod = 1f;
 
     public UI ui;
 
@@ -71,6 +73,8 @@ public class LevelManager : MonoBehaviour
     public TraderRoom TraderRoomInst;
     public Kitchen KitchenInst;
     public Reception ReceptionInst;
+    public StaffRoom StaffRoomInst;
+    public Hall HallInst;
 
     private int[,] RoomTable; 
 
@@ -215,6 +219,12 @@ public class LevelManager : MonoBehaviour
             case TypeOfRoom.Reception:
                 RoomBuf = Instantiate(ReceptionInst, Pos, new Quaternion());
                 break;
+            case TypeOfRoom.StaffRoom:
+                RoomBuf = Instantiate(StaffRoomInst, Pos, new Quaternion());
+                break;
+            case TypeOfRoom.Hall:
+                RoomBuf = Instantiate(HallInst, Pos, new Quaternion());
+                break;
         }
         RoomBuf.PosInTable = PosInTableBuf;
         RoomTable[PosInTableBuf.floor, PosInTableBuf.NumOfRoom] = (int)RoomBuf.RoomType;
@@ -346,4 +356,19 @@ public class LevelManager : MonoBehaviour
         }
         return StairList;
     }
+
+    //Есть ли в таверне подходящая комната для данного типа посетителя
+    public bool is_suitable_room_exist(TypeOfVisitor CurrentVisitorType)
+    {
+        List<Room> RoomListBuf = new List<Room>(_RoomList);
+        foreach (Room room in RoomListBuf)
+        {
+            if (room.is_Suitable_for_TypeOfVisitor(CurrentVisitorType) && room.Vis == null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

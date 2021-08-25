@@ -12,13 +12,6 @@ public class Stairs : Room
 
     public Vector3 MidPos; //Середина лестницы
 
-    private LevelManager LM;
-
-    private GameObject _UpB;
-    private GameObject _DownB;
-
-    private GameObject _PlayerBuf; //Заносим сюда персонажа игрока, пока он стоит в проходе
-
     private void Start()
     {
         _UpB = _Can.transform.Find("ArrowUp").gameObject;
@@ -109,50 +102,6 @@ public class Stairs : Room
             {
                 Person.GetComponent<BaseCharacter>().RoomBuf = LowerStair;
             }
-        }
-    }
-
-    private new void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.tag == "Player")
-        {
-            _PlayerBuf = collision.gameObject;
-            _PC = collision.GetComponent<PlayerController>();
-            toggle_buttons();
-        }
-        else if (collision.tag == "Character")
-        {
-            collision.GetComponent<BaseCharacter>().RoomBuf = this;
-        }
-    }
-
-    private new void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.tag == "Player")
-        {
-            _PlayerBuf = null;
-            _PC = null;
-            toggle_buttons();
-        }
-        else if (collision.tag == "Character")
-        {
-            collision.GetComponent<BaseCharacter>().RoomBuf = null;
-        }
-    }
-
-    private new void toggle_buttons()
-    {
-        if(_UpB.activeSelf)
-        {
-            _UpB.SetActive(false);
-            _DownB.SetActive(false);
-            _HammerB.gameObject.SetActive(false);
-        }
-        else
-        {
-            _UpB.SetActive(true);
-            _DownB.SetActive(true);
-            _HammerB.gameObject.SetActive(true);
         }
     }
 

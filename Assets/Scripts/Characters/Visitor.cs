@@ -39,5 +39,32 @@ public class Visitor : BaseCharacter
         }
     }
 
+    protected void Update()
+    {
+        switch (CharacterState)
+        {
+            case StateOfCharacter.Idle:
+                break;
+            case StateOfCharacter.MoveToRoom:
+                move_to_GlobalTarget();
+                if (isGlobalTargetReached == true)
+                {
+                    reset_state();
+                }
+                break;
+            case StateOfCharacter.MoveToReception:
+                move_to_GlobalTarget();
+                //Если добрались до ресепшена
+                if (isGlobalTargetReached == true)
+                {
+                    reset_state();
+                    RoomBuf.GetComponent<Reception>().set_Visitor(this.GetComponent<Visitor>());
+                }
+                break;
+            case StateOfCharacter.FollowPerson:
+                follow_GlobalTarget();
+                break;
+        }
+    }
 
 }

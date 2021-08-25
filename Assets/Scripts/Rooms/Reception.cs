@@ -2,69 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Reception : Room
+public class Reception : BaseWorkerRoom
 {
-    private GameObject _TakeKeysB;
-    public Visitor VisitorBuf;
-
-    private BaseType _PlayerBuf;
 
     private void Start()
     {
         _TakeKeysB = _Can.transform.Find("TakeKeysB").gameObject;
-        VisitorBuf = null;
+        _RejectB = _Can.transform.Find("RejectB").gameObject;
+        _VisitorBuf = null;
         _PlayerBuf = null;
     }
 
     //Проводить посетителя к комнате
     public void take_visitor_to_room()
     {
-        if (VisitorBuf != null && 
+        if (_VisitorBuf != null && 
             (_PlayerBuf != null && _PlayerBuf.GetComponent<PlayerController>().FollowingVisitor == null))
         {
-            VisitorBuf.change_state(BaseCharacter.StateOfCharacter.FollowPerson, _PlayerBuf);
+            _VisitorBuf.change_state(BaseCharacter.StateOfCharacter.FollowPerson, _PlayerBuf.GetComponent<BaseType>());
             _LM.VisInQueue = null;
             _LM.create_visitor_if_possible();
-            _PlayerBuf.GetComponent<PlayerController>().FollowingVisitor = VisitorBuf;
+            _PlayerBuf.GetComponent<PlayerController>().FollowingVisitor = _VisitorBuf;
+            disable_buttons();
         }
     }
 
-    private new void toggle_buttons()
+    public void reject_to_visitor()
     {
-        if (_TakeKeysB.gameObject.activeSelf)
-        {
-            _TakeKeysB.gameObject.SetActive(false);
-        }
-        else
-        {
-            _TakeKeysB.gameObject.SetActive(true);
-        }
+        Destroy(_VisitorBuf.gameObject);
+        disable_buttons();
     }
 
-    private new void OnTriggerEnter2D(Collider2D collision)
+    public void set_Visitor(Visitor NewVisitor)
     {
-        if (collision.tag == "Player")
-        {      
-            toggle_buttons();
-            _PlayerBuf = collision.GetComponent<BaseType>();
-        }
-        else if (collision.tag == "Character")
-        {
-            collision.GetComponent<BaseCharacter>().RoomBuf = this;
-        }
-    }
-
-    private new void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.tag == "Player")
-        {
-            toggle_buttons();
-            _PlayerBuf = null;
-        }
-        else if (collision.tag == "Character")
-        {
-            collision.GetComponent<BaseCharacter>().RoomBuf = null;
-        }
+        _VisitorBuf = NewVisitor;
+        enable_buttons();
     }
 
 }
