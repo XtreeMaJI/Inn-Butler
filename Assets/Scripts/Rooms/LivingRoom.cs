@@ -21,6 +21,7 @@ public class LivingRoom : Room
         _CheckInB = _Can.transform.Find("CheckInB").gameObject;
         _CleanB = _Can.transform.Find("CleanB").gameObject;
         _CancelCleanB = _Can.transform.Find("CancelCleanB").gameObject;
+        _GiveItemB = _Can.transform.Find("GiveItemB").gameObject;
 
         init_InfoPanel();
         init_bars();
@@ -98,20 +99,21 @@ public class LivingRoom : Room
     {
         if (Vis != null)
         {
-            if (_IsCleanGoing == false)
+            if (_IsCleanGoing == false && Clean >= 0f)
             {
                 Clean -= (MaxClean / LevelManager.DayLength) * Time.deltaTime;
                 _CleanBar.fillAmount = Clean / MaxClean;
             }
 
             if (RoomType != LevelManager.TypeOfRoom.Bedroom &&
-               RoomType != LevelManager.TypeOfRoom.CheapRoom)
+               RoomType != LevelManager.TypeOfRoom.CheapRoom && 
+               Food >= 0f)
             {
                 Food -= (MaxFood / LevelManager.DayLength) * Time.deltaTime;
                 _FoodBar.fillAmount = Food / MaxFood;
             }
 
-            if (RoomType == LevelManager.TypeOfRoom.TraderRoom)
+            if (RoomType == LevelManager.TypeOfRoom.TraderRoom && Fun >= 0f)
             {
                 Fun -= (MaxFun / LevelManager.DayLength) * Time.deltaTime;
                 _FunBar.fillAmount = Fun / MaxFun;
@@ -169,6 +171,42 @@ public class LivingRoom : Room
         {
             StopCleaning();
         }
+    }
+
+    public void press_GiveItemB()
+    {
+        _PC?.set_PlayerState(PlayerController.StateOfPlayer.Common);
+        take_item_from_person(_PC?.get_Item());
+        disable_buttons();
+        enable_buttons();
+    }
+
+    public void take_item_from_person(Carryable item)
+    {
+        if(item.GetComponent<Food>())
+        {
+            refill_Food();
+            Destroy(item.gameObject);
+            return;
+        }
+        if (item.GetComponent<Wine>())
+        {
+            refill_Fun();
+            Destroy(item.gameObject);
+            return;
+        }
+    }
+
+    private void refill_Food()
+    {
+        Food += LevelManager.AMOUNT_OF_FOOD_REFILLED_BY_DISH;
+        _FoodBar.fillAmount = Food / MaxFood;
+    }
+
+    private void refill_Fun()
+    {
+        Fun += LevelManager.AMOUNT_OF_FUN_REFILLED_BY_WINE;
+        _FunBar.fillAmount = Fun / MaxFun;
     }
 
 }

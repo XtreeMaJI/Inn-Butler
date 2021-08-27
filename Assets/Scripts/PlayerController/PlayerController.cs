@@ -10,20 +10,23 @@ public class PlayerController : BaseType
     public enum StateOfPlayer: int
     {
         Common = 0,
-        Cleaning = 1
+        Cleaning = 1,
+        Cooking = 2,
+        Carrying = 3
     }
 
     public GameObject cam; //Главная камера
     
     private Rigidbody2D _rb;
 
-    public float speed;
+    private float speed = 1f;
 
     public UI ui;
 
     public Visitor FollowingVisitor { get; set; }
 
-    private StateOfPlayer PlayerState;
+    [SerializeField]private StateOfPlayer PlayerState;
+    private Carryable _Item;
 
     void Start()
     {
@@ -38,13 +41,18 @@ public class PlayerController : BaseType
 
     void Update()
     {
+        float dir = Input.GetAxis("Horizontal");
         switch (PlayerState)
         {
             case StateOfPlayer.Common:
-                float dir = Input.GetAxis("Horizontal");
                 _rb.transform.Translate(new Vector3(dir * speed * Time.deltaTime, 0f, 0f));
                 break;
             case StateOfPlayer.Cleaning:
+                break;
+            case StateOfPlayer.Cooking:
+                break;
+            case StateOfPlayer.Carrying:
+                _rb.transform.Translate(new Vector3(dir * speed * Time.deltaTime, 0f, 0f));
                 break;
         }
 
@@ -61,6 +69,21 @@ public class PlayerController : BaseType
     public void set_PlayerState(StateOfPlayer NewState)
     {
         PlayerState = NewState;
+    }
+
+    public StateOfPlayer get_PlayerState()
+    {
+        return PlayerState;
+    }
+
+    public Carryable get_Item()
+    {
+        return _Item;
+    }
+
+    public void set_Item(Carryable NewItem)
+    {
+        _Item = NewItem;
     }
 
 }

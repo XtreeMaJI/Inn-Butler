@@ -17,7 +17,8 @@ public class LevelManager : MonoBehaviour
         StaffRoom = 8,
         Hall = 9,
         Reception = 10,
-        Kitchen = 11
+        Kitchen = 11,
+        Bar = 12
     }
 
     public enum TypeOfVisitor : int
@@ -60,6 +61,9 @@ public class LevelManager : MonoBehaviour
     public const int NumOfTaverns = 5;
     public const float BaseMaxClean = 1f; //Показатель максимально возможной чистоты в самой дешёвой комнате
     public const float PlayerCleanMod = 1f;
+    public const float PlayerCookMod = 1f;
+    public const float AMOUNT_OF_FOOD_REFILLED_BY_DISH = 1f;
+    public const float AMOUNT_OF_FUN_REFILLED_BY_WINE = 1f;
 
     public UI ui;
 
@@ -75,6 +79,7 @@ public class LevelManager : MonoBehaviour
     public Reception ReceptionInst;
     public StaffRoom StaffRoomInst;
     public Hall HallInst;
+    public Bar BarInst;
 
     private int[,] RoomTable; 
 
@@ -224,6 +229,9 @@ public class LevelManager : MonoBehaviour
                 break;
             case TypeOfRoom.Hall:
                 RoomBuf = Instantiate(HallInst, Pos, new Quaternion());
+                break;
+            case TypeOfRoom.Bar:
+                RoomBuf = Instantiate(BarInst, Pos, new Quaternion());
                 break;
         }
         RoomBuf.PosInTable = PosInTableBuf;

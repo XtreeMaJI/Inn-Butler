@@ -29,6 +29,9 @@ public class Room : BaseType
     protected GameObject _TakeKeysB; //Кнопка сопровождения посетителя к комнате(Reception)
     protected GameObject _RejectB; //Кнопка отказа посетителю(Reception)
     protected GameObject _CookFoodB; //Кнопка готовки еды(Kitchen)
+    protected GameObject _StopCookFoodB;
+
+    protected Food _FinishedDish; //Завершённое блюдо на кухне
 
     protected PlayerController _PC;
     protected GameObject _PlayerBuf;
@@ -114,11 +117,23 @@ public class Room : BaseType
             RoomType = LevelManager.TypeOfRoom.Reception;
             return;
         }
+        if (this.GetComponent<Bar>())
+        {
+            RoomType = LevelManager.TypeOfRoom.Bar;
+            return;
+        }
         RoomType = LevelManager.TypeOfRoom.Room;
     }
 
-    protected void enable_buttons()
+    protected virtual void enable_buttons()
     {
+        if(_PC?.get_PlayerState() == PlayerController.StateOfPlayer.Carrying &&
+            RoomType != LevelManager.TypeOfRoom.Stairs)
+        {
+            _GiveItemB?.SetActive(true);
+            return;
+        }
+
         if (RoomType == LevelManager.TypeOfRoom.Room ||
             RoomType == LevelManager.TypeOfRoom.Hall)
         {
@@ -167,6 +182,10 @@ public class Room : BaseType
 
         if (RoomType == LevelManager.TypeOfRoom.Kitchen)
         {
+            if(_FinishedDish != null)
+            {
+                return;
+            }
             _HammerB.SetActive(true);
             _CookFoodB.SetActive(true);
             _AddStaffB.SetActive(true);
@@ -197,9 +216,21 @@ public class Room : BaseType
 
     }
 
-    protected void disable_buttons()
+    protected virtual void disable_buttons()
     {
-        switch(RoomType)
+        _HammerB?.SetActive(false);
+        _GiveItemB?.SetActive(false);
+        _UpB?.SetActive(false);
+        _DownB?.SetActive(false);
+        _RejectB?.SetActive(false);
+        _TakeKeysB?.SetActive(false);
+        _AddStaffB?.SetActive(false);
+        _CookFoodB?.SetActive(false);
+        _StopCookFoodB?.SetActive(false);
+        _CleanB?.SetActive(false);
+        _CheckInB?.SetActive(false);
+
+        /*switch (RoomType)
         {
             case LevelManager.TypeOfRoom.Room:
                 _HammerB.SetActive(false);
@@ -218,6 +249,7 @@ public class Room : BaseType
                 _HammerB.SetActive(false);
                 _CookFoodB.SetActive(false);
                 _AddStaffB.SetActive(false);
+                _StopCookFoodB.SetActive(false);
                 break;
             case LevelManager.TypeOfRoom.Hall:
                 _HammerB.SetActive(false);
@@ -231,7 +263,7 @@ public class Room : BaseType
                 _CleanB.SetActive(false);
                 _CheckInB.SetActive(false);
                 break;
-        }
+        }*/
     }
 
     protected void OnTriggerEnter2D(Collider2D collision)

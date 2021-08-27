@@ -23,10 +23,10 @@ public class CreateLevel : MonoBehaviour
         //Создаём первые 4 комнаты
         _LM.upgrade_room(_LM.add_room(0), LevelManager.TypeOfRoom.Reception);
         _LM.add_room(0);
-        _LM.upgrade_room(_LM.add_room(0), LevelManager.TypeOfRoom.StandartRoom);
+        _LM.upgrade_room(_LM.add_room(0), LevelManager.TypeOfRoom.TraderRoom);
         _LM.upgrade_room(_LM.add_room(1), LevelManager.TypeOfRoom.Room);
         _LM.add_room(1);
-        _LM.upgrade_room(_LM.add_room(1), LevelManager.TypeOfRoom.StandartRoom);
+        _LM.upgrade_room(_LM.add_room(1), LevelManager.TypeOfRoom.TraderRoom);
 
     }
 
