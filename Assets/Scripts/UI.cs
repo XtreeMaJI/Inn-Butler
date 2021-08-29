@@ -133,17 +133,19 @@ public class UI : MonoBehaviour
         _RoomBuf = SelectedRoom.GetComponent<Room>();
     }
 
-    public void open_AddStaffPanel(LevelManager.TypeOfRoom CurrentRoomType)
+    public void open_AddStaffPanel(BaseWorkerRoom CurrentRoom)
     {
         disable_all_panels();
-        configure_AddStaffPanel(CurrentRoomType);
+        configure_AddStaffPanel(CurrentRoom.RoomType);
+        _RoomBuf = CurrentRoom;
         _AddStaffPanel.SetActive(true);
     }
 
     private void configure_AddStaffPanel(LevelManager.TypeOfRoom CurrentRoomType)
     {
         disable_AddStaffPanel_buttons();
-        if(CurrentRoomType == LevelManager.TypeOfRoom.Kitchen)
+        hide_buttons_with_existing_workers(CurrentRoomType);
+        if (CurrentRoomType == LevelManager.TypeOfRoom.Kitchen)
         {
             _AddStaffKitchenPanel.SetActive(true);
             return;
@@ -168,6 +170,54 @@ public class UI : MonoBehaviour
         }
     }
 
+    //Спрятать на AddStaffPanel кнопку, если работник уже был нанят
+    private void hide_buttons_with_existing_workers(LevelManager.TypeOfRoom RoomType)
+    {
+        switch(RoomType)
+        {
+            case LevelManager.TypeOfRoom.StaffRoom:
+                if ((_RoomBuf as BaseWorkerRoom).is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Housemaid))
+                {
+                    _AddStaffStaffRoomPanel.transform.Find("HireHousemaidB").gameObject.SetActive(false);
+                }
+                break;
+            case LevelManager.TypeOfRoom.Kitchen:
+                if ((_RoomBuf as BaseWorkerRoom).is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Cook))
+                {
+                    _AddStaffKitchenPanel.transform.Find("HireCookB").gameObject.SetActive(false);
+                }
+                if ((_RoomBuf as BaseWorkerRoom).is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Servant))
+                {
+                    _AddStaffKitchenPanel.transform.Find("HireServantB").gameObject.SetActive(false);
+                }
+                break;
+        }
+        
+    }
+
+    public void handle_AddStaffPanel_button_press()
+    {
+        string NameOfPressedButton = EventSystem.current.currentSelectedGameObject.name;
+        if (_RoomBuf == null)
+        {
+            return;
+        }
+
+        switch(NameOfPressedButton)
+        {
+            case "HireHousemaidB":
+                LM.create_worker(LevelManager.TypeOfWorker.Housemaid, _RoomBuf);
+                break;
+            case "HireCookB":
+                LM.create_worker(LevelManager.TypeOfWorker.Cook, _RoomBuf);
+                break;
+            case "HireServantB":
+                LM.create_worker(LevelManager.TypeOfWorker.Servant, _RoomBuf);
+                break;
+        }
+        configure_AddStaffPanel(_RoomBuf.RoomType);
+    }
+
     //Обаботчик нажатия кнопок с панели апгрейдов
     public void handle_upgrade_panel_button_press()
     {
@@ -190,7 +240,7 @@ public class UI : MonoBehaviour
                 _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Bar);
                 break;
             case "DestroyUpgradesButton":
-                //Если команта - это единственная лестница на этаже, то на даём удалить её
+                //Если комната - это единственная лестница на этаже, то на даём удалить её
                 if (_RoomBuf.RoomType == LevelManager.TypeOfRoom.Stairs &&
                    LM.get_rooms_count_of_type_on_floor(LevelManager.TypeOfRoom.Stairs, _RoomBuf.PosInTable.floor) == 1)
                 {

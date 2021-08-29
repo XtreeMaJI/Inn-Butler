@@ -388,7 +388,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &215361472
 GameObject:
@@ -2629,6 +2629,49 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1252156521}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1307384075
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1307384077}
+  - component: {fileID: 1307384076}
+  m_Layer: 0
+  m_Name: Scheduler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1307384076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307384075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28be106d8ec0ae84c8cb6d38c1d81fc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1307384077
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307384075}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1319165481
 GameObject:
   m_ObjectHideFlags: 0
@@ -3554,12 +3597,18 @@ MonoBehaviour:
   RepSecondTown: 0
   RepThirdTown: 0
   RepFourthTown: 0
+  ExitFromTavern: {fileID: 0}
   TravellerInst: {fileID: 6805331989879620901, guid: 7b1cb638805c4a644b335553719131e4,
     type: 3}
   CitizenInst: {fileID: 6104960541926258820, guid: 1706550d1ec5e3749a9c4a01400722e6,
     type: 3}
   MerchantInst: {fileID: 6292217663374994432, guid: 6c5dc0f4dda49ed4d9d10e6f6cac5a55,
     type: 3}
+  HosemaidInst: {fileID: 2350288853532446692, guid: 89975f72477917a47a9f8c6eccdc4343,
+    type: 3}
+  CookInst: {fileID: 8486756327647585219, guid: 0e89339195d7325479dddb357e009efa,
+    type: 3}
+  ServantInst: {fileID: 0}
   VisInQueue: {fileID: 0}
 --- !u!114 &1534110995
 MonoBehaviour:
@@ -3576,6 +3625,8 @@ MonoBehaviour:
   RoomInst: {fileID: 8350313203085943654, guid: 4314fdd3eba721641bbd070069a734e0,
     type: 3}
   StairsInst: {fileID: 4134244977608193252, guid: c6a444d94cddc824fb35c5bbbbc436ca,
+    type: 3}
+  TavernExitInst: {fileID: 3421234093868812542, guid: 53587b3b4435e3146a54414924e66e46,
     type: 3}
 --- !u!4 &1534110996
 Transform:
@@ -4867,7 +4918,7 @@ RectTransform:
   - {fileID: 895268952}
   - {fileID: 1934272919}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5271,6 +5322,36 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 4806852310065108186, guid: 84e634e3c289ccd49b7333d79648a985,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4806852310065108186, guid: 84e634e3c289ccd49b7333d79648a985,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4806852310065108186, guid: 84e634e3c289ccd49b7333d79648a985,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4806852310065108186, guid: 84e634e3c289ccd49b7333d79648a985,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1955488374}
+    - target: {fileID: 4806852310065108186, guid: 84e634e3c289ccd49b7333d79648a985,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: handle_AddStaffPanel_button_press
+      objectReference: {fileID: 0}
+    - target: {fileID: 4806852310065108186, guid: 84e634e3c289ccd49b7333d79648a985,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84e634e3c289ccd49b7333d79648a985, type: 3}
 --- !u!224 &2450437557832534228 stripped
@@ -5290,6 +5371,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HireServantB
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847223049911977088, guid: 7d632c08f1052634b8e3000a711c6afe,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847223049911977088, guid: 7d632c08f1052634b8e3000a711c6afe,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847223049911977088, guid: 7d632c08f1052634b8e3000a711c6afe,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847223049911977088, guid: 7d632c08f1052634b8e3000a711c6afe,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1955488374}
+    - target: {fileID: 3847223049911977088, guid: 7d632c08f1052634b8e3000a711c6afe,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: handle_AddStaffPanel_button_press
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847223049911977088, guid: 7d632c08f1052634b8e3000a711c6afe,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7812130304488105029, guid: 7d632c08f1052634b8e3000a711c6afe,
         type: 3}
@@ -5520,6 +5631,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HireHousemaidB
+      objectReference: {fileID: 0}
+    - target: {fileID: 9036758805040603775, guid: 05b69d3d2e59f384794e28ad7a9625a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9036758805040603775, guid: 05b69d3d2e59f384794e28ad7a9625a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9036758805040603775, guid: 05b69d3d2e59f384794e28ad7a9625a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9036758805040603775, guid: 05b69d3d2e59f384794e28ad7a9625a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1955488374}
+    - target: {fileID: 9036758805040603775, guid: 05b69d3d2e59f384794e28ad7a9625a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: handle_AddStaffPanel_button_press
+      objectReference: {fileID: 0}
+    - target: {fileID: 9036758805040603775, guid: 05b69d3d2e59f384794e28ad7a9625a6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 05b69d3d2e59f384794e28ad7a9625a6, type: 3}

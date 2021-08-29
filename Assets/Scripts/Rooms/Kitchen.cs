@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
 {
+    public enum StateOfKitchen: int
+    {
+        Waiting = 0,
+        Cooking = 1,
+    }
+
     public Food FoodInst;
     public Wine WineInst;
     private Vector3 _PlaceForFood;
-
-    private bool isFoodCooking;
 
     //Текущая и конечная степень готовки
     private float _CurCookDegree;
@@ -17,12 +21,16 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
     private float _BaseCookSpeed;
     private float _CookSpeedMod;
 
+    private Cook _Cook = null;
+    private Servant _Servant = null;
+
+    StateOfKitchen RoomState = StateOfKitchen.Waiting;
+
     private void Start()
     {
         _CookFoodB = _Can.transform.Find("CookFoodB").gameObject;
         _PlaceForFood = transform.Find("PlaceForFood").position;
         _StopCookFoodB = _Can.transform.Find("StopCookFoodB").gameObject;
-        isFoodCooking = false;
 
         _MaxCookDegree = 1f;
         _CurCookDegree = 0f;
@@ -40,7 +48,7 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
 
     public void CookFood()
     {
-        if (isFoodCooking)
+        if (RoomState == StateOfKitchen.Cooking)
         {
             _CurCookDegree += _BaseCookSpeed * _CookSpeedMod * Time.deltaTime;
             if(_CurCookDegree >= _MaxCookDegree)
@@ -64,6 +72,7 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
     public void press_StopCookFoodB()
     {
         stop_cooking();
+        _StopCookFoodB.SetActive(false);
     }
 
     public void start_cooking(float NewCookSpeedMod)
@@ -73,15 +82,15 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
             return;
         }
 
-        isFoodCooking = true;
+        RoomState = StateOfKitchen.Cooking;
         _CookSpeedMod = NewCookSpeedMod;
     }
 
     public void stop_cooking()
     {
-        isFoodCooking = false;
+        RoomState = StateOfKitchen.Waiting;
 
-        if(_PlayerBuf != null)
+        if (_PlayerBuf != null)
         {
             disable_buttons();
             _PC?.set_PlayerState(PlayerController.StateOfPlayer.Common);
@@ -96,6 +105,48 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
     public void delete_item_from_room(Carryable item)
     {
         _FinishedDish = null;
+    }
+
+    public override bool is_worker_on_this_pos_exist(LevelManager.TypeOfWorker WorkerType)
+    {
+        if(WorkerType == LevelManager.TypeOfWorker.Cook && _Cook == null)
+        {
+            return false;
+        }
+        if (WorkerType == LevelManager.TypeOfWorker.Servant && _Servant == null)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public override void add_worker(BaseWorker NewWorker)
+    {
+        if (NewWorker.GetComponent<Cook>() != null &&
+            _Cook == null)
+        {
+            _Cook = (NewWorker as Cook);
+        }
+        if (NewWorker.GetComponent<Servant>() != null &&
+            _Servant == null)
+        {
+            _Servant = (NewWorker as Servant);
+        }
+    }
+
+    protected override void enable_buttons()
+    {
+        if (_FinishedDish != null)
+        {
+            return;
+        }
+        _HammerB.SetActive(true);
+        _AddStaffB.SetActive(true);
+
+        if (_Cook != null)
+        {
+            _CookFoodB.SetActive(true);
+        }
     }
 
 }

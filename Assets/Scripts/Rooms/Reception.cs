@@ -39,4 +39,14 @@ public class Reception : BaseWorkerRoom
         enable_buttons();
     }
 
+    public override bool is_worker_on_this_pos_exist(LevelManager.TypeOfWorker WorkerType)
+    {
+        return false;
+    }
+
+    public override void add_worker(BaseWorker NewWorker)
+    {
+
+    }
+
 }

@@ -8,26 +8,34 @@ public class BaseCharacter : BaseType
     {
         Idle = 0,
         MoveToReception = 1,
-        MoveToRoom = 2,
+        MoveToOwnRoom = 2,
         FollowPerson = 3,
         MoveToHall = 4,
-        MoveToExit = 5
+        MoveToExit = 5,
+        MoveToWorkerRoom = 6,
+        MoveToPlaceForWork = 7,
+        Working = 8
     }
 
-    public Room CurRoom;
+    protected float Speed = 1f;
+    protected float WorkSpeedMod = 1f;
 
-    public BaseType GlobalTarget; //Пункт назначения(персонаж или комната)
-    public BaseType LocalTarget; //Промежуточный пункт на пути к GlobalTarget(лестница или комната)
+    public Room CurRoom { get; set; } //Комната, к которой привязан персонаж(рабочая или жилая)
+
+    private BaseType GlobalTarget; //Пункт назначения(персонаж или комната)
+    private BaseType LocalTarget; //Промежуточный пункт на пути к GlobalTarget(лестница или комната)
 
     public BaseType RoomBuf;
 
-    public StateOfCharacter CharacterState;
+    [SerializeField]protected StateOfCharacter CharacterState;
 
-    public float Speed = 1f;
+    private float _Speed = 1f;
 
     private Rigidbody2D _rb;
 
     protected bool isGlobalTargetReached;
+
+    protected BaseType _ExitPos;
 
     protected override void Awake()
     {
@@ -41,6 +49,8 @@ public class BaseCharacter : BaseType
 
         RoomBuf = null;
         isGlobalTargetReached = false;
+
+        _ExitPos = Object.FindObjectOfType<TavernExit>();
     }
 
     protected void move_to_GlobalTarget()
@@ -73,7 +83,7 @@ public class BaseCharacter : BaseType
             if (LocalTarget.transform.position.x - transform.position.x != 0)
             {
                 float dir = (LocalTarget.transform.position.x - transform.position.x) / Mathf.Abs(LocalTarget.transform.position.x - transform.position.x);
-                _rb.transform.Translate(new Vector3(dir * Speed * Time.deltaTime, 0f, 0f));
+                _rb.transform.Translate(new Vector3(dir * _Speed * Time.deltaTime, 0f, 0f));
             }
         }
     }
@@ -108,7 +118,7 @@ public class BaseCharacter : BaseType
             {
                 dir = (LocalTarget.transform.position.x - transform.position.x) / Mathf.Abs(LocalTarget.transform.position.x - transform.position.x);
             }
-            _rb.transform.Translate(new Vector3(dir * Speed * Time.deltaTime, 0f, 0f));
+            _rb.transform.Translate(new Vector3(dir * _Speed * Time.deltaTime, 0f, 0f));
         }
     }
 
@@ -180,7 +190,7 @@ public class BaseCharacter : BaseType
         return false;
     }
 
-    public void change_state(StateOfCharacter NewState, BaseType NewGlobalTarget)
+    public void change_state(StateOfCharacter NewState, BaseType NewGlobalTarget = null)
     {
         CharacterState = NewState;
         GlobalTarget = NewGlobalTarget;

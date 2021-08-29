@@ -28,6 +28,13 @@ public class LevelManager : MonoBehaviour
         Merchant = 2
     }
 
+    public enum TypeOfWorker : int
+    {
+        Housemaid = 0,
+        Cook = 1,
+        Servant = 2
+    }
+
     public struct PosInRoomTable
     {
         public int floor;
@@ -91,11 +98,15 @@ public class LevelManager : MonoBehaviour
     public int RepFourthTown;
 
     private int _TotalNumOfVisitors = 100; //Общее ежедневное число путешественников
-    private Vector3 _VistorSpawnPos = new Vector3(0f, 0f, 0f);
+    public TavernExit ExitFromTavern;
 
     public Traveller TravellerInst;
     public Citizen CitizenInst;
     public Merchant MerchantInst;
+
+    public Housemaid HosemaidInst;
+    public Cook CookInst;
+    public Servant ServantInst;
 
     private List<Room> _RoomList;
 
@@ -312,19 +323,20 @@ public class LevelManager : MonoBehaviour
             MerchantSpawnChance = NumOfRoomsForMerchants / NumOfLivingRooms;
         }
 
+        Vector3 VisitorSpawnPos = ExitFromTavern.transform.position;
         float RandomNum = Random.Range(0f, 1f);
         if (RandomNum < TravellerSpawnChance)
         {
-            VisInQueue = Instantiate(TravellerInst, _VistorSpawnPos, new Quaternion());
+            VisInQueue = Instantiate(TravellerInst, VisitorSpawnPos, new Quaternion());
         }
         else if (RandomNum > TravellerSpawnChance &&
             RandomNum <= TravellerSpawnChance + CitizenSpawnChance)
         {
-            VisInQueue = Instantiate(CitizenInst, _VistorSpawnPos, new Quaternion());
+            VisInQueue = Instantiate(CitizenInst, VisitorSpawnPos, new Quaternion());
         }
         else if(RandomNum > TravellerSpawnChance + CitizenSpawnChance)
         {
-            VisInQueue = Instantiate(MerchantInst, _VistorSpawnPos, new Quaternion());
+            VisInQueue = Instantiate(MerchantInst, VisitorSpawnPos, new Quaternion());
         }
     }
 
@@ -377,6 +389,31 @@ public class LevelManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void create_worker(TypeOfWorker WorkerType, Room RoomForWorker)
+    {
+        Vector3 WorkerSpawnPos = ExitFromTavern.transform.position;
+        BaseWorker NewBaseWorker = null;
+
+        switch (WorkerType)
+        {
+            case TypeOfWorker.Housemaid:
+                NewBaseWorker = Instantiate(HosemaidInst, WorkerSpawnPos, new Quaternion());
+                break;
+            case TypeOfWorker.Cook:
+                NewBaseWorker = Instantiate(CookInst, WorkerSpawnPos, new Quaternion());
+                break;
+            case TypeOfWorker.Servant:
+                NewBaseWorker = Instantiate(ServantInst, WorkerSpawnPos, new Quaternion());
+                break;
+        }
+
+        if (NewBaseWorker != null)
+        {
+            NewBaseWorker.set_WorkerRoom((RoomForWorker as BaseWorkerRoom));
+        }
+
     }
 
 }

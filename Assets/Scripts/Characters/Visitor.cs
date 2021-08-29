@@ -4,23 +4,17 @@ using UnityEngine;
 
 public class Visitor : BaseCharacter
 {
-    public enum StateOfVisitor: int
-    {
-        Idle = 0,
-        MoveToReception = 1,
-        MoveToRoom = 2,
-        FollowPerson = 3
-    }
-
     public LevelManager.TypeOfVisitor VisitorType { get; private set; }
 
-    public int LeaseTerm; //Время, на которое посетитель займёт комнату
+    private float TimeForWalk; //Время, затрачиваемое на прогулку
 
     protected void Start()
     {
         Reception Rec = Object.FindObjectOfType<Reception>();
         change_state(StateOfCharacter.MoveToReception, Rec);
         init_Visitor();
+
+        TimeForWalk = 2 * LevelManager.DayLength / 24;
     }
 
     private void init_Visitor()
@@ -45,12 +39,15 @@ public class Visitor : BaseCharacter
         {
             case StateOfCharacter.Idle:
                 break;
-            case StateOfCharacter.MoveToRoom:
-                move_to_GlobalTarget();
-                if (isGlobalTargetReached == true)
+            case StateOfCharacter.MoveToOwnRoom:
+                if (isGlobalTargetReached == true && CurRoom != null &&
+                   (CurRoom as LivingRoom).RoomState == LivingRoom.StateOfLivingRoom.Empty)
                 {
+                    (CurRoom as LivingRoom).RoomState = LivingRoom.StateOfLivingRoom.VisitorInside;
                     reset_state();
+                    break;
                 }
+                move_to_GlobalTarget();
                 break;
             case StateOfCharacter.MoveToReception:
                 move_to_GlobalTarget();
@@ -64,7 +61,27 @@ public class Visitor : BaseCharacter
             case StateOfCharacter.FollowPerson:
                 follow_GlobalTarget();
                 break;
+            case StateOfCharacter.MoveToExit:
+                move_to_GlobalTarget();
+                if (isGlobalTargetReached == true)
+                {
+                    StartCoroutine("wait_outside");
+                    reset_state();
+                }
+                break;
         }
+    }
+
+    public void go_for_walk()
+    {
+        change_state(StateOfCharacter.MoveToExit, _ExitPos);
+        (CurRoom as LivingRoom).RoomState = LivingRoom.StateOfLivingRoom.Empty;
+    }
+
+    private IEnumerator wait_outside()
+    {
+        yield return new WaitForSeconds(TimeForWalk);
+        change_state(StateOfCharacter.MoveToOwnRoom, CurRoom);
     }
 
 }

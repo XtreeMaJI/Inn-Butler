@@ -180,40 +180,12 @@ public class Room : BaseType
             return;
         }
 
-        if (RoomType == LevelManager.TypeOfRoom.Kitchen)
-        {
-            if(_FinishedDish != null)
-            {
-                return;
-            }
-            _HammerB.SetActive(true);
-            _CookFoodB.SetActive(true);
-            _AddStaffB.SetActive(true);
-            return;
-        }
-
         if (RoomType == LevelManager.TypeOfRoom.StaffRoom)
         {
             _HammerB.SetActive(true);
             _AddStaffB.SetActive(true);
             return;
         }
-
-        //Если комната не принадлежит ни к одному из перечисленных выше типов, то это LivingRoom
-        if (_PC.FollowingVisitor != null && is_Suitable_for_TypeOfVisitor(_PC.FollowingVisitor.VisitorType) &&
-            Vis == null)
-        {
-            _CheckInB.SetActive(true);
-        }
-        if (Clean < MaxClean && _PC.FollowingVisitor == null && Vis != null)
-        {
-            _CleanB.SetActive(true);
-        }
-        if (_PC.FollowingVisitor == null && Vis == null)
-        {
-            _HammerB.SetActive(true);
-        }
-
     }
 
     protected virtual void disable_buttons()
@@ -229,41 +201,6 @@ public class Room : BaseType
         _StopCookFoodB?.SetActive(false);
         _CleanB?.SetActive(false);
         _CheckInB?.SetActive(false);
-
-        /*switch (RoomType)
-        {
-            case LevelManager.TypeOfRoom.Room:
-                _HammerB.SetActive(false);
-                break;
-            case LevelManager.TypeOfRoom.Stairs:
-                _UpB.SetActive(false);
-                _DownB.SetActive(false);
-                _HammerB.SetActive(false);
-                break;
-            case LevelManager.TypeOfRoom.Reception:
-                _RejectB.SetActive(false);
-                _TakeKeysB.SetActive(false);
-                _AddStaffB.SetActive(false);
-                break;
-            case LevelManager.TypeOfRoom.Kitchen:
-                _HammerB.SetActive(false);
-                _CookFoodB.SetActive(false);
-                _AddStaffB.SetActive(false);
-                _StopCookFoodB.SetActive(false);
-                break;
-            case LevelManager.TypeOfRoom.Hall:
-                _HammerB.SetActive(false);
-                break;
-            case LevelManager.TypeOfRoom.StaffRoom:
-                _HammerB.SetActive(false);
-                _AddStaffB.SetActive(false);
-                break;
-            default:
-                _HammerB.SetActive(false);
-                _CleanB.SetActive(false);
-                _CheckInB.SetActive(false);
-                break;
-        }*/
     }
 
     protected void OnTriggerEnter2D(Collider2D collision)

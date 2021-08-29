@@ -93,4 +93,14 @@ public class Bar : BaseWorkerRoom, IRoomWithCarryables
         }
     }
 
+    public override bool is_worker_on_this_pos_exist(LevelManager.TypeOfWorker WorkerType)
+    {
+        return false;
+    }
+
+    public override void add_worker(BaseWorker NewWorker)
+    {
+
+    }
+
 }
