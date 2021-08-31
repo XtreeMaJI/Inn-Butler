@@ -11,6 +11,8 @@ public class Carryable : MonoBehaviour, ICarryable
 
     private IRoomWithCarryables _ParentRoom;
 
+    private bool _IsCarryableGrabbed = false;
+
     //private const float RANGE_TO_REACH_CARRY_POS = 0.01f;
     //private const float LOCAL_X_OF_CARRY_POS = 0f;
 
@@ -22,12 +24,18 @@ public class Carryable : MonoBehaviour, ICarryable
 
     //float speed = 0f;
 
-    public void grab(Transform NewPlaceForCarry)
+    public Carryable grab(Transform NewPlaceForCarry)
     {
+        if(_IsCarryableGrabbed == true)
+        {
+            return null;
+        }
         PlaceForCarry = NewPlaceForCarry;
         this.transform.SetParent(PlaceForCarry);
         this.transform.localPosition = new Vector2(0f, 0f);
         delete_Carryable_from_room();
+        _IsCarryableGrabbed = true;
+        return this;
         //Анимация подлёта
         //StartCoroutine("start_moving_to_PlaceForCarry");
     }

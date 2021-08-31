@@ -17,9 +17,6 @@ public class BaseCharacter : BaseType
         Working = 8
     }
 
-    protected float Speed = 1f;
-    protected float WorkSpeedMod = 1f;
-
     public Room CurRoom { get; set; } //Комната, к которой привязан персонаж(рабочая или жилая)
 
     private BaseType GlobalTarget; //Пункт назначения(персонаж или комната)

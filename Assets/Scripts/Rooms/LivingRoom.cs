@@ -23,6 +23,8 @@ public class LivingRoom : Room
 
     public StateOfLivingRoom RoomState { get; set; }
 
+    private bool _IsFoodRequested = false; //Добавлена ли комната в очередь на еду
+    private bool _IsWineRequested = false; //Добавлена ли комната в очередь на вино
 
     protected void Start()
     {
@@ -56,12 +58,17 @@ public class LivingRoom : Room
     //Заселить посетителя
     public void press_CheckIn_button()
     {
-        _PC.FollowingVisitor.CurRoom = this;
-        _PC.FollowingVisitor.change_state(BaseCharacter.StateOfCharacter.MoveToOwnRoom, this);
-        Vis = _PC.FollowingVisitor;
+        check_visitor_in(_PC.FollowingVisitor);
+        _PC.FollowingVisitor = null;
+    }
+
+    public void check_visitor_in(Visitor NewVisitor)
+    {
+        NewVisitor.CurRoom = this;
+        NewVisitor.change_state(BaseCharacter.StateOfCharacter.MoveToOwnRoom, this);
+        Vis = NewVisitor;
         toggle_InfoPanel();
         disable_buttons();
-        _PC.FollowingVisitor = null;
         enable_buttons();
     }
 
@@ -69,6 +76,9 @@ public class LivingRoom : Room
     {
         Vis = null;
         RoomState = StateOfLivingRoom.Empty;
+        _Scheduler.delete_room_from_CleanQueue(this);
+        _Scheduler.delete_room_from_FoodQueue(this);
+        _Scheduler.delete_room_from_WineQueue(this);
     }
 
     protected new void OnTriggerEnter2D(Collider2D collision)
@@ -128,12 +138,22 @@ public class LivingRoom : Room
             {
                 Food -= (MaxFood / LevelManager.DayLength) * Time.deltaTime;
                 _FoodBar.fillAmount = Food / MaxFood;
+                if(_IsFoodRequested == false && 
+                   MaxFood - Food >= LevelManager.BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM / 2)
+                {
+                    request_food();
+                }
             }
 
             if (RoomType == LevelManager.TypeOfRoom.TraderRoom && Fun >= 0f)
             {
                 Fun -= (MaxFun / LevelManager.DayLength) * Time.deltaTime;
                 _FunBar.fillAmount = Fun / MaxFun;
+                if(_IsWineRequested == false && 
+                   MaxFun - Fun >= LevelManager.BASE_AMOUNT_OF_WINE_FOR_LIVING_ROOM / 2)
+                {
+                    request_wine();
+                }
             }
         }
     }
@@ -217,21 +237,37 @@ public class LivingRoom : Room
         }
     }
 
-    private void refill_Food()
+    public void refill_Food()
     {
         Food += LevelManager.AMOUNT_OF_FOOD_REFILLED_BY_DISH;
         _FoodBar.fillAmount = Food / MaxFood;
+        _IsFoodRequested = false;
+        _Scheduler.delete_room_from_FoodQueue(this);
     }
 
-    private void refill_Fun()
+    public void refill_Fun()
     {
         Fun += LevelManager.AMOUNT_OF_FUN_REFILLED_BY_WINE;
         _FunBar.fillAmount = Fun / MaxFun;
+        _IsWineRequested = false;
+        _Scheduler.delete_room_from_WineQueue(this);
     }
 
     private void request_cleaning()
     {
         _Scheduler.add_room_in_CleanQueue(this);
+    }
+
+    private void request_food()
+    {
+        _Scheduler.add_room_in_FoodQueue(this);
+        _IsFoodRequested = true;
+    }
+
+    private void request_wine()
+    {
+        _Scheduler.add_room_in_WineQueue(this);
+        _IsWineRequested = true;
     }
 
     private bool is_clean_dropped_by_half(float OldCleanMes)

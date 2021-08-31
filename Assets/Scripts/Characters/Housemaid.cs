@@ -12,11 +12,17 @@ public class Housemaid : BaseWorker
 
     protected override void find_work()
     {
-        _RoomForWork = _Scheduler.get_closest_room_from_queue(CurRoom);
+        if(_RoomForWork == null)
+        {
+            _RoomForWork = _Scheduler.get_room_from_queue(CurRoom);
+            _Scheduler.delete_room_from_CleanQueue(_RoomForWork);
+        }
+
         if(_RoomForWork != null && _RoomForWork.RoomState == LivingRoom.StateOfLivingRoom.Empty)
         {
             change_state(StateOfCharacter.MoveToPlaceForWork, _RoomForWork);
             _RoomForWork.RoomState = LivingRoom.StateOfLivingRoom.AwaitForCleaning;
+            return;
         }
     }
 
@@ -25,6 +31,7 @@ public class Housemaid : BaseWorker
         if(_RoomForWork.Clean >= _RoomForWork.MaxClean)
         {
             change_state(StateOfCharacter.MoveToWorkerRoom, CurRoom);
+            _RoomForWork = null;
             return;
         }
         if (_RoomForWork.RoomState != LivingRoom.StateOfLivingRoom.Cleaning)

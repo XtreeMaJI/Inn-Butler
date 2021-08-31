@@ -31,8 +31,6 @@ public class Room : BaseType
     protected GameObject _CookFoodB; //Кнопка готовки еды(Kitchen)
     protected GameObject _StopCookFoodB;
 
-    protected Food _FinishedDish; //Завершённое блюдо на кухне
-
     protected PlayerController _PC;
     protected GameObject _PlayerBuf;
 
@@ -74,21 +72,21 @@ public class Room : BaseType
         {
             RoomType = LevelManager.TypeOfRoom.StandartRoom;
             MaxClean = 4f * LevelManager.BaseMaxClean;
-            MaxFood = 1f;
+            MaxFood = LevelManager.BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM;
             return;
         }
         if (this.GetComponent<ComfortableRoom>())
         {
             RoomType = LevelManager.TypeOfRoom.ComfortableRoom;
             MaxClean = 8f * LevelManager.BaseMaxClean;
-            MaxFood = 2f;
+            MaxFood = 2 * LevelManager.BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM;
             return;
         }
         if (this.GetComponent<TraderRoom>())
         {
             RoomType = LevelManager.TypeOfRoom.TraderRoom;
             MaxClean = 16f * LevelManager.BaseMaxClean;
-            MaxFood = 3f;
+            MaxFood = 3 * LevelManager.BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM;
             MaxFun = 1f;
             return;
         }

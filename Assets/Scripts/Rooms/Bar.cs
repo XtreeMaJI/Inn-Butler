@@ -18,6 +18,8 @@ public class Bar : BaseWorkerRoom, IRoomWithCarryables
 
     public Wine WineInst;
 
+    private Servant _Servant = null;
+
     private void Start()
     {
         _BuyWineB = _Can.transform.Find("BuyWineB").gameObject;
@@ -95,12 +97,47 @@ public class Bar : BaseWorkerRoom, IRoomWithCarryables
 
     public override bool is_worker_on_this_pos_exist(LevelManager.TypeOfWorker WorkerType)
     {
+        if(_Servant != null)
+        {
+            return true;
+        }
         return false;
     }
 
     public override void add_worker(BaseWorker NewWorker)
     {
+        if(NewWorker == null)
+        {
+            return;
+        }
 
+        if(NewWorker.GetComponent<Servant>() != null && _Servant == null)
+        {
+            _Servant = (NewWorker as Servant);
+            StartCoroutine("renew_wine_supplies");
+        }
+    }
+
+    public Carryable try_take_wine()
+    {
+        Carryable Wine = null;
+
+        foreach(var place in PlacesForWine)
+        {
+            if(place.item != null)
+            {
+                Wine = place.item;
+                delete_item_from_room(place.item);
+            }
+        }
+        return Wine;
+    }
+
+    private IEnumerator renew_wine_supplies()
+    {
+        yield return new WaitForSeconds(LevelManager.DayLength/_Servant.get_WorkSpeedMod());
+        StartCoroutine("renew_wine_supplies");
+        add_Wine();
     }
 
 }

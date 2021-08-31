@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class Reception : BaseWorkerRoom
 {
+    private Servant _Servant = null;
+
+    public Vector3 PosForWork;
 
     private void Start()
     {
         _TakeKeysB = _Can.transform.Find("TakeKeysB").gameObject;
         _RejectB = _Can.transform.Find("RejectB").gameObject;
+        PosForWork = transform.Find("PosForWork").position;
         _VisitorBuf = null;
         _PlayerBuf = null;
     }
@@ -41,12 +45,52 @@ public class Reception : BaseWorkerRoom
 
     public override bool is_worker_on_this_pos_exist(LevelManager.TypeOfWorker WorkerType)
     {
+        if(_Servant != null)
+        {
+            return true;
+        }
         return false;
     }
 
     public override void add_worker(BaseWorker NewWorker)
     {
+        if(NewWorker != null && _Servant == null)
+        {
+            _Servant = (NewWorker as Servant);
+        }
+    }
 
+    public bool is_VisitorBuf_empty()
+    {
+        if(_VisitorBuf == null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    //Работает для посетителя в VisitorBuf
+    public void check_visitor_in_suitable_room()
+    {
+        if(_VisitorBuf == null)
+        {
+            return;
+        }
+
+        List<Room> RoomList = _LM.get_RoomList_copy();
+
+        foreach(Room iRoom in RoomList)
+        {
+            if(iRoom.is_Suitable_for_TypeOfVisitor(_VisitorBuf.VisitorType) &&
+               iRoom.Vis == null)
+            {
+                (iRoom as LivingRoom).check_visitor_in(_VisitorBuf);
+                _VisitorBuf = null;
+                _LM.VisInQueue = null;
+                _LM.create_visitor_if_possible();
+                return;
+            }
+        }
     }
 
 }

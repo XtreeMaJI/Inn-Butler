@@ -136,8 +136,8 @@ public class UI : MonoBehaviour
     public void open_AddStaffPanel(BaseWorkerRoom CurrentRoom)
     {
         disable_all_panels();
-        configure_AddStaffPanel(CurrentRoom.RoomType);
         _RoomBuf = CurrentRoom;
+        configure_AddStaffPanel(CurrentRoom.RoomType);
         _AddStaffPanel.SetActive(true);
     }
 
@@ -191,6 +191,18 @@ public class UI : MonoBehaviour
                     _AddStaffKitchenPanel.transform.Find("HireServantB").gameObject.SetActive(false);
                 }
                 break;
+            case LevelManager.TypeOfRoom.Bar:
+                if ((_RoomBuf as BaseWorkerRoom).is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Servant))
+                {
+                    _AddStaffBarPanel.transform.Find("HireServantB").gameObject.SetActive(false);
+                }
+                break;
+            case LevelManager.TypeOfRoom.Reception:
+                if ((_RoomBuf as BaseWorkerRoom).is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Servant))
+                {
+                    _AddStaffReceptionPanel.transform.Find("HireServantB").gameObject.SetActive(false);
+                }
+                break;
         }
         
     }
@@ -202,8 +214,7 @@ public class UI : MonoBehaviour
         {
             return;
         }
-
-        switch(NameOfPressedButton)
+        switch (NameOfPressedButton)
         {
             case "HireHousemaidB":
                 LM.create_worker(LevelManager.TypeOfWorker.Housemaid, _RoomBuf);

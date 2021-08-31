@@ -17,7 +17,12 @@ public class StaffRoom : BaseWorkerRoom
 
     public override void add_worker(BaseWorker NewWorker)
     {
-        if(NewWorker.GetComponent<Housemaid>() != null
+        if (NewWorker == null)
+        {
+            return;
+        }
+
+        if (NewWorker.GetComponent<Housemaid>() != null
            && _Housemaid == null)
         {
             _Housemaid = (NewWorker as Housemaid);

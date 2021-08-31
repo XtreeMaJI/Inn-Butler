@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
 public interface ICarryable 
 {
-    void grab(Transform GrabbingPerson);
+    Carryable grab(Transform GrabbingPerson);
 }

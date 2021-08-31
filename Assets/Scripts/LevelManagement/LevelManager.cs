@@ -71,6 +71,8 @@ public class LevelManager : MonoBehaviour
     public const float PlayerCookMod = 1f;
     public const float AMOUNT_OF_FOOD_REFILLED_BY_DISH = 1f;
     public const float AMOUNT_OF_FUN_REFILLED_BY_WINE = 1f;
+    public const float BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM = 1f; //Еда для StandartRoom в день
+    public const float BASE_AMOUNT_OF_WINE_FOR_LIVING_ROOM = 1f; //Вино для TraderRoom в день
 
     public UI ui;
 
@@ -414,6 +416,12 @@ public class LevelManager : MonoBehaviour
             NewBaseWorker.set_WorkerRoom((RoomForWorker as BaseWorkerRoom));
         }
 
+    }
+
+    public List<Room> get_RoomList_copy()
+    {
+        List<Room> RoomListCopy = new List<Room>(_RoomList);
+        return RoomListCopy;
     }
 
 }

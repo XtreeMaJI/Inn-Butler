@@ -4,7 +4,9 @@ using UnityEngine;
 
 public abstract class BaseWorker : BaseCharacter
 {
-    protected LivingRoom _RoomForWork;
+    protected LivingRoom _RoomForWork = null;
+    protected float Speed = 1f;
+    protected float WorkSpeedMod = 1f;
 
     private void Update()
     {
@@ -38,4 +40,10 @@ public abstract class BaseWorker : BaseCharacter
     protected abstract void find_work();
 
     public abstract void set_WorkerRoom(BaseWorkerRoom RoomForWorker);
+
+    public float get_WorkSpeedMod()
+    {
+        return WorkSpeedMod;
+    }
+
 }
