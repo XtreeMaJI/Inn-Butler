@@ -55,15 +55,6 @@ public class PlayerController : BaseType
                 _rb.transform.Translate(new Vector3(dir * speed * Time.deltaTime, 0f, 0f));
                 break;
         }
-
-        change_cam_pos();
-    }
-
-    private void change_cam_pos()
-    {
-        Vector3 NewPos = this.transform.position;
-        NewPos.z = cam.transform.position.z;
-        cam.transform.SetPositionAndRotation(NewPos, new Quaternion());
     }
 
     public void set_PlayerState(StateOfPlayer NewState)

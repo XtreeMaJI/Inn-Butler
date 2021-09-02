@@ -14,7 +14,9 @@ public class BaseCharacter : BaseType
         MoveToExit = 5,
         MoveToWorkerRoom = 6,
         MoveToPlaceForWork = 7,
-        Working = 8
+        Working = 8,
+        ReturnToPay = 9, //Возвращение в комнату, чтобы расплатиться и уйти
+        LeaveTavern = 10
     }
 
     public Room CurRoom { get; set; } //Комната, к которой привязан персонаж(рабочая или жилая)

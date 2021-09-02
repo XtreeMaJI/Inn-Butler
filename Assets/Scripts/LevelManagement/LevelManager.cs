@@ -55,7 +55,7 @@ public class LevelManager : MonoBehaviour
     public const float RoomBlockSize = 100;
     public const float RoomBlockShift = 10;
     public const int NumOfFloors = 4;
-    public const int MaxRoomsOnFloor = 25; //Максимальное число комнат на этаже
+    public const int MaxRoomsOnFloor = 5; //Максимальное число комнат на этаже
     public const int SameTownTavernStartRep = 400;
     public const int SecondTownTavernStartRep = 6000;
     public const int ThirdTownTavernStartRep = 4000;
@@ -64,7 +64,7 @@ public class LevelManager : MonoBehaviour
     public const int SecondTownTavernMaxRep = 12000;
     public const int ThirdTownTavernMaxRep = 7000;
     public const int FourthTownTavernMaxRep = 6000;
-    public const float DayLength = 4f; //Длина дня в секундах
+    public const float DayLength = 10f; //Длина дня в секундах
     public const int NumOfTaverns = 5;
     public const float BaseMaxClean = 1f; //Показатель максимально возможной чистоты в самой дешёвой комнате
     public const float PlayerCleanMod = 1f;
@@ -73,6 +73,21 @@ public class LevelManager : MonoBehaviour
     public const float AMOUNT_OF_FUN_REFILLED_BY_WINE = 1f;
     public const float BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM = 1f; //Еда для StandartRoom в день
     public const float BASE_AMOUNT_OF_WINE_FOR_LIVING_ROOM = 1f; //Вино для TraderRoom в день
+    public const int BEDROOM_PRICE = 10;
+    public const int CHEAP_ROOM_PRICE = 15;
+    public const int STANDRT_ROOM_PRICE = 30;
+    public const int COMFORTABLE_ROOM_PRICE = 50;
+    public const int TRADER_ROOM_PRICE = 90;
+    public const int STAFF_ROOM_PRICE = 20;
+    public const int BAR_PRICE = 40;
+    public const int KITCHEN_PRICE = 30;
+    public const int STAIRS_PRICE = 5;
+    public const int HALL_PRICE = 60;
+    public const int BASE_SALARY = 1;
+    public const int COOK_PRICE = 10;
+    public const int HOUSEMAID_PRICE = 10;
+    public const int SERVANT_PRICE = 30;
+    public const int WINE_PRICE = 5;
 
     public UI ui;
 
@@ -131,7 +146,6 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         init_taverns();
-        StartCoroutine("distribute_visitors");
     }
 
     //Добавить комнату на выбранный этаж
@@ -188,7 +202,7 @@ public class LevelManager : MonoBehaviour
     }
 
     //Получить количество комнат на выбранном этаже
-    private int get_num_of_rooms_on_floor(int floor)
+    public int get_num_of_rooms_on_floor(int floor)
     {
         int NumOfRooms = 0;
         for(int i = 0; i<MaxRoomsOnFloor; i++)
@@ -292,9 +306,8 @@ public class LevelManager : MonoBehaviour
     }
 
     //Определяем сколько посетителей должно появиться в нашей таверне, исходя из репутации
-    IEnumerator distribute_visitors()
+    public void distribute_visitors()
     {
-        yield return new WaitForSeconds(DayLength); 
         increace_TavernsRep();
         _DailyAmountOfVisitors = _TotalNumOfVisitors * RepSelf / (RepSelf + RepSameTown + RepSecondTown + RepThirdTown + RepFourthTown);
         if(_DailyAmountOfVisitors < 3)
@@ -302,17 +315,16 @@ public class LevelManager : MonoBehaviour
             _DailyAmountOfVisitors = 3;
         }
         create_visitor_if_possible();
-        StartCoroutine("distribute_visitors");
     }
 
     //Создаём посетителя в зависимости от количества комнат, для каждого типа посетителей
     public void create_visitor()
     {
         _DailyAmountOfVisitors--;
-        int NumOfRoomsForTravellers = get_num_of_rooms_in_tavern_for_TypeOfVisitor(TypeOfVisitor.Traveller);
-        int NumOfRoomsForCitizens = get_num_of_rooms_in_tavern_for_TypeOfVisitor(TypeOfVisitor.Citizen);
-        int NumOfRoomsForMerchants = get_num_of_rooms_in_tavern_for_TypeOfVisitor(TypeOfVisitor.Merchant);
-        int NumOfLivingRooms = NumOfRoomsForTravellers + NumOfRoomsForCitizens + NumOfRoomsForMerchants;
+        float NumOfRoomsForTravellers = get_num_of_rooms_in_tavern_for_TypeOfVisitor(TypeOfVisitor.Traveller);
+        float NumOfRoomsForCitizens = get_num_of_rooms_in_tavern_for_TypeOfVisitor(TypeOfVisitor.Citizen);
+        float NumOfRoomsForMerchants = get_num_of_rooms_in_tavern_for_TypeOfVisitor(TypeOfVisitor.Merchant);
+        float NumOfLivingRooms = NumOfRoomsForTravellers + NumOfRoomsForCitizens + NumOfRoomsForMerchants;
        
         float TravellerSpawnChance = 0f;
         float CitizenSpawnChance = 0f;

@@ -18,9 +18,10 @@ public class Servant : BaseWorker
 
     private Carryable _Carryable = null;
 
-    private void Start()
+    private new void Start()
     {
         _PosForCarry = transform.Find("PosForCarry");
+        _MoneyManager.increase_TotalSalary(Salary);
     }
 
 

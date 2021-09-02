@@ -7,6 +7,12 @@ public abstract class BaseWorker : BaseCharacter
     protected LivingRoom _RoomForWork = null;
     protected float Speed = 1f;
     protected float WorkSpeedMod = 1f;
+    protected int Salary = LevelManager.BASE_SALARY;
+
+    protected void Start()
+    {
+        _MoneyManager.increase_TotalSalary(Salary);
+    }
 
     private void Update()
     {
@@ -44,6 +50,11 @@ public abstract class BaseWorker : BaseCharacter
     public float get_WorkSpeedMod()
     {
         return WorkSpeedMod;
+    }
+
+    protected void OnDestroy()
+    {
+        _MoneyManager.decrease_TotalSalary(Salary);
     }
 
 }

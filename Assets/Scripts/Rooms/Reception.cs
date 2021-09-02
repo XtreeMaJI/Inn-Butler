@@ -8,11 +8,14 @@ public class Reception : BaseWorkerRoom
 
     public Vector3 PosForWork;
 
+    protected GameObject _TakeKeysB; //Кнопка сопровождения посетителя к комнате
+    protected GameObject _RejectB; //Кнопка отказа посетителю
+
     private void Start()
     {
         _TakeKeysB = _Can.transform.Find("TakeKeysB").gameObject;
         _RejectB = _Can.transform.Find("RejectB").gameObject;
-        PosForWork = transform.Find("PosForWork").position;
+        PosForWork = transform.Find("PlaceForWork").position;
         _VisitorBuf = null;
         _PlayerBuf = null;
     }
@@ -35,6 +38,7 @@ public class Reception : BaseWorkerRoom
     {
         Destroy(_VisitorBuf.gameObject);
         disable_buttons();
+        enable_buttons();
     }
 
     public void set_Visitor(Visitor NewVisitor)
@@ -57,6 +61,8 @@ public class Reception : BaseWorkerRoom
         if(NewWorker != null && _Servant == null)
         {
             _Servant = (NewWorker as Servant);
+            disable_buttons();
+            enable_buttons();
         }
     }
 
@@ -92,5 +98,39 @@ public class Reception : BaseWorkerRoom
             }
         }
     }
+
+    protected override void enable_buttons()
+    {
+        if(_PC == null)
+        {
+            return;
+        }
+
+        _AddStaffB.SetActive(true);
+
+        if (_VisitorBuf == null || _Servant != null ||
+           (_PC != null && _PlayerBuf.GetComponent<PlayerController>().FollowingVisitor != null))
+        {
+            return;
+        }
+
+        if (_LM.is_suitable_room_exist(_VisitorBuf.VisitorType))
+        {
+            _TakeKeysB.SetActive(true);
+        }
+        else
+        {
+            _RejectB.SetActive(true);
+        }
+
+    }
+
+    protected override void disable_buttons()
+    {
+        _RejectB.SetActive(false);
+        _TakeKeysB.SetActive(false);
+        _AddStaffB.SetActive(false);
+    }
+
 
 }

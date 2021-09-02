@@ -9,6 +9,7 @@ public class UI : MonoBehaviour
     public PlayerController Controller;
 
     public LevelManager LM;
+    private MoneyManager _MoneyManager;
 
     private GameObject _MainPanel;
     private GameObject _BuildPanel;
@@ -73,6 +74,8 @@ public class UI : MonoBehaviour
         _AddStaffBarPanel = _AddStaffPanel.transform.Find("BarPanel").gameObject;
 
         _RoomBuf = null;
+
+        _MoneyManager = Object.FindObjectOfType<MoneyManager>();
     }
 
     //Открыть меню строительства новых комнат
@@ -98,6 +101,8 @@ public class UI : MonoBehaviour
     //Настраиваем, какие кнопки будут показаны
     public void configure_UpgradePanel(GameObject SelectedRoom)
     {
+        UpgradePrice Price;
+
         disable_upgrade_panel_buttons();
         _RoomBuf = SelectedRoom.GetComponent<Room>();
 
@@ -108,6 +113,8 @@ public class UI : MonoBehaviour
 
         if (_RoomBuf.RoomType == LevelManager.TypeOfRoom.Room)
         {
+            Price = _LevelUpB.transform.Find("UpgradePrice").GetComponent<UpgradePrice>();
+            Price.set_LevelUpButton_price(_RoomBuf.RoomType);
             _LevelUpB.SetActive(true);
             _StairsB.SetActive(true);
             _HallB.SetActive(true);
@@ -127,6 +134,8 @@ public class UI : MonoBehaviour
         }
 
         //Если комната относится к типу LivingRoom
+        Price = _LevelUpB.transform.Find("UpgradePrice").GetComponent<UpgradePrice>();
+        Price.set_LevelUpButton_price(_RoomBuf.RoomType);
         _LevelUpB.SetActive(true);
         _LevelDownB.SetActive(true);
         _DestroyUpgradesB.SetActive(true);
@@ -143,7 +152,8 @@ public class UI : MonoBehaviour
 
     private void configure_AddStaffPanel(LevelManager.TypeOfRoom CurrentRoomType)
     {
-        disable_AddStaffPanel_buttons();
+        disable_AddStaffPanel_panels();
+        enable_AddStaffPanel_buttons();
         hide_buttons_with_existing_workers(CurrentRoomType);
         if (CurrentRoomType == LevelManager.TypeOfRoom.Kitchen)
         {
@@ -209,7 +219,13 @@ public class UI : MonoBehaviour
 
     public void handle_AddStaffPanel_button_press()
     {
-        string NameOfPressedButton = EventSystem.current.currentSelectedGameObject.name;
+        GameObject PressedButton = EventSystem.current.currentSelectedGameObject;
+        HirePrice Price = null;
+        if (PressedButton.transform.Find("HirePrice") != null)
+        {
+            Price = PressedButton.transform.Find("HirePrice").GetComponent<HirePrice>();
+        }
+        string NameOfPressedButton = PressedButton.name;
         if (_RoomBuf == null)
         {
             return;
@@ -217,13 +233,37 @@ public class UI : MonoBehaviour
         switch (NameOfPressedButton)
         {
             case "HireHousemaidB":
-                LM.create_worker(LevelManager.TypeOfWorker.Housemaid, _RoomBuf);
+                if(_MoneyManager.try_purchase(LevelManager.HOUSEMAID_PRICE))
+                {
+                    LM.create_worker(LevelManager.TypeOfWorker.Housemaid, _RoomBuf);
+                }
+                else
+                {
+                    Price.to_twinkle_price_red();
+                    return;
+                }
                 break;
             case "HireCookB":
-                LM.create_worker(LevelManager.TypeOfWorker.Cook, _RoomBuf);
+                if (_MoneyManager.try_purchase(LevelManager.COOK_PRICE))
+                {
+                    LM.create_worker(LevelManager.TypeOfWorker.Cook, _RoomBuf);
+                }
+                else
+                {
+                    Price.to_twinkle_price_red();
+                    return;
+                }
                 break;
             case "HireServantB":
-                LM.create_worker(LevelManager.TypeOfWorker.Servant, _RoomBuf);
+                if (_MoneyManager.try_purchase(LevelManager.SERVANT_PRICE))
+                {
+                    LM.create_worker(LevelManager.TypeOfWorker.Servant, _RoomBuf);
+                }
+                else
+                {
+                    Price.to_twinkle_price_red();
+                    return;
+                }
                 break;
         }
         configure_AddStaffPanel(_RoomBuf.RoomType);
@@ -232,23 +272,69 @@ public class UI : MonoBehaviour
     //Обаботчик нажатия кнопок с панели апгрейдов
     public void handle_upgrade_panel_button_press()
     {
-        string NameOfPressedButton = EventSystem.current.currentSelectedGameObject.name;
+        GameObject PressedButton = EventSystem.current.currentSelectedGameObject;
+        UpgradePrice Price = null;
+        if (PressedButton.transform.Find("UpgradePrice") != null)
+        {
+            Price = PressedButton.transform.Find("UpgradePrice").GetComponent<UpgradePrice>();
+        }
+        string NameOfPressedButton = PressedButton.name;
         switch(NameOfPressedButton)
         {
             case "StairsButton":
-                _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Stairs);
+                if(_MoneyManager.try_purchase(LevelManager.STAIRS_PRICE))
+                {
+                    _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Stairs);
+                }
+                else
+                {
+                    Price.to_twinkle_price_red();
+                    return;
+                }
                 break;
             case "StaffRoomButton":
-                _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.StaffRoom);
+                if (_MoneyManager.try_purchase(LevelManager.STAFF_ROOM_PRICE))
+                {
+                    _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.StaffRoom);
+                }
+                else
+                {
+                    Price.to_twinkle_price_red();
+                    return;
+                }
                 break;
             case "HallButton":
-                _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Hall);
+                if (_MoneyManager.try_purchase(LevelManager.HALL_PRICE))
+                {
+                    _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Hall);
+                }
+                else
+                {
+                    Price.to_twinkle_price_red();
+                    return;
+                }
                 break;
             case "KitchenButton":
-                _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Kitchen);
+                if (_MoneyManager.try_purchase(LevelManager.KITCHEN_PRICE))
+                {
+                    _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Kitchen);
+                }
+                else
+                {
+                    Price.to_twinkle_price_red();
+                    return;
+                }
                 break;
             case "BarButton":
-                _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Bar);
+                if (_MoneyManager.try_purchase(LevelManager.BAR_PRICE))
+                {
+                    _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Bar);
+                }
+                else
+                {
+                    Price.to_twinkle_price_red();
+                    return;
+                }
                 break;
             case "DestroyUpgradesButton":
                 //Если комната - это единственная лестница на этаже, то на даём удалить её
@@ -263,27 +349,67 @@ public class UI : MonoBehaviour
             case "LevelUpButton":
                 if (_RoomBuf.RoomType == LevelManager.TypeOfRoom.Bedroom)
                 {
-                    _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.CheapRoom);
+                    if (_MoneyManager.try_purchase(LevelManager.CHEAP_ROOM_PRICE))
+                    {
+                        _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.CheapRoom);
+                    }
+                    else
+                    {
+                        Price.to_twinkle_price_red();
+                        return;
+                    }
                     break;
                 }
                 if (_RoomBuf.RoomType == LevelManager.TypeOfRoom.CheapRoom)
                 {
-                    _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.StandartRoom);
+                    if (_MoneyManager.try_purchase(LevelManager.STANDRT_ROOM_PRICE))
+                    {
+                        _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.StandartRoom);
+                    }
+                    else
+                    {
+                        Price.to_twinkle_price_red();
+                        return;
+                    }
                     break;
                 }
                 if (_RoomBuf.RoomType == LevelManager.TypeOfRoom.StandartRoom)
                 {
-                    _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.ComfortableRoom);
+                    if (_MoneyManager.try_purchase(LevelManager.COMFORTABLE_ROOM_PRICE))
+                    {
+                        _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.ComfortableRoom);
+                    }
+                    else
+                    {
+                        Price.to_twinkle_price_red();
+                        return;
+                    }
                     break;
                 }
                 if (_RoomBuf.RoomType == LevelManager.TypeOfRoom.ComfortableRoom)
                 {
-                    _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.TraderRoom);
+                    if (_MoneyManager.try_purchase(LevelManager.TRADER_ROOM_PRICE))
+                    {
+                        _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.TraderRoom);
+                    }
+                    else
+                    {
+                        Price.to_twinkle_price_red();
+                        return;
+                    }
                     break;
                 }
                 if (_RoomBuf.RoomType == LevelManager.TypeOfRoom.Room)
                 {
-                    _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Bedroom);
+                    if (_MoneyManager.try_purchase(LevelManager.BEDROOM_PRICE))
+                    {
+                        _RoomBuf = LM.upgrade_room(_RoomBuf, LevelManager.TypeOfRoom.Bedroom);
+                    }
+                    else
+                    {
+                        Price.to_twinkle_price_red();
+                        return;
+                    }
                     break;
                 }
                 break;
@@ -331,12 +457,21 @@ public class UI : MonoBehaviour
         _BarB.SetActive(false);
     }
 
-    private void disable_AddStaffPanel_buttons()
+    private void disable_AddStaffPanel_panels()
     {
         _AddStaffKitchenPanel.SetActive(false);
         _AddStaffStaffRoomPanel.SetActive(false);
         _AddStaffReceptionPanel.SetActive(false);
         _AddStaffBarPanel.SetActive(false);
+    }
+
+    private void enable_AddStaffPanel_buttons()
+    {
+        _AddStaffStaffRoomPanel.transform.Find("HireHousemaidB").gameObject.SetActive(true);
+        _AddStaffKitchenPanel.transform.Find("HireCookB").gameObject.SetActive(true);
+        _AddStaffKitchenPanel.transform.Find("HireServantB").gameObject.SetActive(true);
+        _AddStaffBarPanel.transform.Find("HireServantB").gameObject.SetActive(true);
+        _AddStaffReceptionPanel.transform.Find("HireServantB").gameObject.SetActive(true);
     }
 
     //Сделать неактивными все панели, привязанные к UI
@@ -348,9 +483,20 @@ public class UI : MonoBehaviour
         _AddStaffPanel.SetActive(false);
     }
 
-    public void handle_build_panel_button_press(int floor)
+    public void handle_build_panel_button_press(AddRoomButton AddButton)
     {
-        LM.add_room(floor);
+        if(_MoneyManager.is_enough_money_for_purchase(AddButton.Price.get_Price()))
+        {
+            LM.add_room(AddButton.Floor);
+            AddButton.Price.increase_rent();
+            AddButton.check_num_of_rooms();
+            _MoneyManager.decrease_money(AddButton.Price.get_Price());
+            //_MoneyManager.increase_TotalRent(AddButton.Price.get_Rent());
+        } 
+        else
+        {
+            AddButton.Price.to_twinkle_price_red();
+        }
     }
 
     IEnumerator show_DestrWarn()

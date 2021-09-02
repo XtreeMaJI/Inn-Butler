@@ -148,7 +148,7 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
         _HammerB.SetActive(true);
         _AddStaffB.SetActive(true);
 
-        if (_Cook != null)
+        if (_Cook == null)
         {
             _CookFoodB.SetActive(true);
         }

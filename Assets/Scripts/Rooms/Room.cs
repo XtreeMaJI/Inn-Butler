@@ -26,8 +26,6 @@ public class Room : BaseType
     protected GameObject _CancelCleanB; //Кнопка отмена уборки(LivingRoom)
     protected GameObject _UpB;  //Кнопка вверх при заходе на лестницу
     protected GameObject _DownB;//Кнопка вниз при заходе на лестницу
-    protected GameObject _TakeKeysB; //Кнопка сопровождения посетителя к комнате(Reception)
-    protected GameObject _RejectB; //Кнопка отказа посетителю(Reception)
     protected GameObject _CookFoodB; //Кнопка готовки еды(Kitchen)
     protected GameObject _StopCookFoodB;
 
@@ -39,6 +37,7 @@ public class Room : BaseType
     public LevelManager.TypeOfRoom RoomType;
     public LevelManager.PosInRoomTable PosInTable;
 
+    public int RoomPayment = 0;
 
     protected override void Awake()
     {
@@ -60,12 +59,14 @@ public class Room : BaseType
         {
             RoomType = LevelManager.TypeOfRoom.Bedroom;
             MaxClean = LevelManager.BaseMaxClean;
+            RoomPayment = 2;
             return;
         }
         if (this.GetComponent<CheapRoom>())
         {
             RoomType = LevelManager.TypeOfRoom.CheapRoom;
             MaxClean = 2f * LevelManager.BaseMaxClean;
+            RoomPayment = 4;
             return;
         }
         if (this.GetComponent<StandartRoom>())
@@ -73,6 +74,7 @@ public class Room : BaseType
             RoomType = LevelManager.TypeOfRoom.StandartRoom;
             MaxClean = 4f * LevelManager.BaseMaxClean;
             MaxFood = LevelManager.BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM;
+            RoomPayment = 10;
             return;
         }
         if (this.GetComponent<ComfortableRoom>())
@@ -80,6 +82,7 @@ public class Room : BaseType
             RoomType = LevelManager.TypeOfRoom.ComfortableRoom;
             MaxClean = 8f * LevelManager.BaseMaxClean;
             MaxFood = 2 * LevelManager.BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM;
+            RoomPayment = 20;
             return;
         }
         if (this.GetComponent<TraderRoom>())
@@ -88,6 +91,7 @@ public class Room : BaseType
             MaxClean = 16f * LevelManager.BaseMaxClean;
             MaxFood = 3 * LevelManager.BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM;
             MaxFun = 1f;
+            RoomPayment = 40;
             return;
         }
         if (this.GetComponent<StaffRoom>())
@@ -147,29 +151,6 @@ public class Room : BaseType
             return;
         }
 
-        if (RoomType == LevelManager.TypeOfRoom.Reception)
-        {
-            if (_PlayerBuf == null)
-            {
-                return;
-            }
-            _AddStaffB.SetActive(true);
-            if (_VisitorBuf == null ||
-              (_PlayerBuf != null && _PlayerBuf.GetComponent<PlayerController>().FollowingVisitor != null))
-            {
-                return;
-            }
-            if (_LM.is_suitable_room_exist(_VisitorBuf.VisitorType))
-            {
-                _TakeKeysB.SetActive(true);
-            }
-            else
-            {
-                _RejectB.SetActive(true);
-            }
-            return;
-        }
-
         if (RoomType == LevelManager.TypeOfRoom.Stairs)
         {
             _UpB.SetActive(true);
@@ -192,8 +173,6 @@ public class Room : BaseType
         _GiveItemB?.SetActive(false);
         _UpB?.SetActive(false);
         _DownB?.SetActive(false);
-        _RejectB?.SetActive(false);
-        _TakeKeysB?.SetActive(false);
         _AddStaffB?.SetActive(false);
         _CookFoodB?.SetActive(false);
         _StopCookFoodB?.SetActive(false);

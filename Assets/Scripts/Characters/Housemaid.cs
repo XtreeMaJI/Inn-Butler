@@ -5,11 +5,6 @@ using UnityEngine;
 public class Housemaid : BaseWorker
 {
 
-    private void Start()
-    {
-        change_state(StateOfCharacter.MoveToWorkerRoom, CurRoom);
-    }
-
     protected override void find_work()
     {
         if(_RoomForWork == null)

@@ -72,13 +72,18 @@ public class LivingRoom : Room
         enable_buttons();
     }
 
-    private void free_the_room()
+    public void free_the_room()
     {
         Vis = null;
+        toggle_InfoPanel();
+        handle_visitor_leave_room();
         RoomState = StateOfLivingRoom.Empty;
-        _Scheduler.delete_room_from_CleanQueue(this);
         _Scheduler.delete_room_from_FoodQueue(this);
         _Scheduler.delete_room_from_WineQueue(this);
+        _IsFoodRequested = false;
+        _IsWineRequested = false;
+        Food = MaxFood;
+        Fun = MaxFun;
     }
 
     protected new void OnTriggerEnter2D(Collider2D collision)
@@ -123,13 +128,6 @@ public class LivingRoom : Room
                 float OldClean = Clean;
                 Clean -= (MaxClean / LevelManager.DayLength) * Time.deltaTime;
                 _CleanBar.fillAmount = Clean / MaxClean;
-                if(is_clean_dropped_by_half(OldClean) || Clean <= 0f)
-                {
-                    Vis.go_for_walk();
-                    request_cleaning();
-                    disable_buttons();
-                    enable_buttons();
-                }
             }
 
             if (RoomType != LevelManager.TypeOfRoom.Bedroom &&
@@ -138,23 +136,26 @@ public class LivingRoom : Room
             {
                 Food -= (MaxFood / LevelManager.DayLength) * Time.deltaTime;
                 _FoodBar.fillAmount = Food / MaxFood;
-                if(_IsFoodRequested == false && 
-                   MaxFood - Food >= LevelManager.BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM / 2)
-                {
-                    request_food();
-                }
             }
 
             if (RoomType == LevelManager.TypeOfRoom.TraderRoom && Fun >= 0f)
             {
                 Fun -= (MaxFun / LevelManager.DayLength) * Time.deltaTime;
                 _FunBar.fillAmount = Fun / MaxFun;
-                if(_IsWineRequested == false && 
-                   MaxFun - Fun >= LevelManager.BASE_AMOUNT_OF_WINE_FOR_LIVING_ROOM / 2)
-                {
-                    request_wine();
-                }
             }
+
+            if (_IsFoodRequested == false &&
+                MaxFood - Food >= LevelManager.BASE_AMOUNT_OF_FOOD_FOR_LIVING_ROOM / 2)
+            {
+                request_food();
+            }
+
+            if (_IsWineRequested == false &&
+                MaxFun - Fun >= LevelManager.BASE_AMOUNT_OF_WINE_FOR_LIVING_ROOM / 2)
+            {
+                request_wine();
+            }
+
         }
     }
 
@@ -307,6 +308,14 @@ public class LivingRoom : Room
             _HammerB.SetActive(true);
         }
 
+    }
+
+    //Применяется, когда посетитель выходит на прогулку или освобождает комнату насовсем
+    public void handle_visitor_leave_room()
+    {
+        disable_buttons();
+        enable_buttons();
+        request_cleaning();
     }
 
 }

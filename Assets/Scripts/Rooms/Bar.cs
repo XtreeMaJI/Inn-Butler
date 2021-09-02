@@ -63,7 +63,10 @@ public class Bar : BaseWorkerRoom, IRoomWithCarryables
 
     public void press_BuyWineB()
     {
-        add_Wine();
+        if(_MoneyManager.try_purchase(LevelManager.WINE_PRICE))
+        {
+            add_Wine();
+        }
     }
 
     public void add_Wine()
@@ -128,6 +131,7 @@ public class Bar : BaseWorkerRoom, IRoomWithCarryables
             {
                 Wine = place.item;
                 delete_item_from_room(place.item);
+                break;
             }
         }
         return Wine;
@@ -136,8 +140,8 @@ public class Bar : BaseWorkerRoom, IRoomWithCarryables
     private IEnumerator renew_wine_supplies()
     {
         yield return new WaitForSeconds(LevelManager.DayLength/_Servant.get_WorkSpeedMod());
-        StartCoroutine("renew_wine_supplies");
         add_Wine();
+        StartCoroutine("renew_wine_supplies");
     }
 
 }

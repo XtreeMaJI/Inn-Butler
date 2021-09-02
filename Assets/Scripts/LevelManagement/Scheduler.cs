@@ -74,8 +74,8 @@ public class Scheduler : MonoBehaviour
         int NumOfRoomFirst = FirstRoom.PosInTable.NumOfRoom;
         int NumOfRoomSecond = SecondRoom.PosInTable.NumOfRoom;
 
-        if((NumOfRoomFirst + WORKERS_RANGE_OF_REACH > NumOfRoomSecond && NumOfRoomFirst < NumOfRoomSecond) ||
-           (NumOfRoomFirst - WORKERS_RANGE_OF_REACH < NumOfRoomSecond && NumOfRoomFirst > NumOfRoomSecond))
+        if((NumOfRoomFirst + WORKERS_RANGE_OF_REACH >= NumOfRoomSecond && NumOfRoomFirst <= NumOfRoomSecond) ||
+           (NumOfRoomFirst - WORKERS_RANGE_OF_REACH <= NumOfRoomSecond && NumOfRoomFirst >= NumOfRoomSecond))
         {
             return true;
         }
