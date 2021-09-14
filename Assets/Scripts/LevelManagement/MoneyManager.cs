@@ -74,6 +74,7 @@ public class MoneyManager : MonoBehaviour
 
     public void handle_day_start()
     {
+        
         decrease_money(TotalSalaryPayment);
         decrease_money(TotalRentPayment);
     }

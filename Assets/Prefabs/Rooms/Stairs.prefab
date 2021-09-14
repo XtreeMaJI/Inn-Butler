@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4d7e1f53be33ec9409ec233a6db5beeb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4aeb710213dc99f46bc11a689b515023, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -194,7 +194,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4d7e1f53be33ec9409ec233a6db5beeb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2804f1ad8be3f9d4699f81b974c08c9f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -323,7 +323,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b45fc0bd5d3368b4e88252ea8fb344a3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 248b5d0bfd82b9c4e9a7e2f778e0387a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -559,10 +559,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -281694911
-  m_SortingLayer: -2
+  m_SortingLayerID: 122434177
+  m_SortingLayer: -7
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2fc04806da71ab84f8728f891a880832, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cd79090b662a80348a8a06e1010a2a73, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -637,6 +637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4004150b326c3924ba2cce56aa05730d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurFloor: 0
   Clean: 0
   Food: 0
   Fun: 0
@@ -645,7 +646,7 @@ MonoBehaviour:
   MaxFun: 0
   Vis: {fileID: 0}
   RoomType: 0
+  RoomPayment: 0
   UpperStair: {fileID: 0}
   LowerStair: {fileID: 0}
   MidPos: {x: 0, y: 0, z: 0}
-  _PlayerBuf: {fileID: 0}

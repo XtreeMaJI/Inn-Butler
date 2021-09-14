@@ -40,17 +40,26 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Visitor
+  - name: Bg
+    uniqueID: 4013272385
+    locked: 0
+  - name: RoomBg
+    uniqueID: 122434177
+    locked: 0
+  - name: InsideRoom
     uniqueID: 623867245
     locked: 0
   - name: Furniture
     uniqueID: 3230003895
     locked: 0
-  - name: InsideRoom
+  - name: InnerWall
     uniqueID: 3728046527
     locked: 0
-  - name: Bg
-    uniqueID: 4013272385
+  - name: Worker
+    uniqueID: 2612700653
+    locked: 0
+  - name: Visitor
+    uniqueID: 3984620483
     locked: 0
   - name: Player
     uniqueID: 1145734503

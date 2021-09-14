@@ -13,6 +13,8 @@ public class CreateLevel : MonoBehaviour
 
     private LevelManager _LM;
 
+    public GameObject BGInst; //Земля и задний фон
+
     private void Start()
     {
         RoomWidth = RoomInst.GetComponent<BoxCollider2D>().size.x;
@@ -25,14 +27,25 @@ public class CreateLevel : MonoBehaviour
         Room FirstRoom = _LM.upgrade_room(_LM.add_room(0), LevelManager.TypeOfRoom.Reception);
         _LM.add_room(0);
         _LM.upgrade_room(_LM.add_room(0), LevelManager.TypeOfRoom.TraderRoom);
-        _LM.upgrade_room(_LM.add_room(1), LevelManager.TypeOfRoom.Room);
+        _LM.upgrade_room(_LM.add_room(1), LevelManager.TypeOfRoom.TraderRoom);
         _LM.add_room(1);
         _LM.upgrade_room(_LM.add_room(1), LevelManager.TypeOfRoom.TraderRoom);
 
         //Создаём выход из таверны
-        float x = FirstRoom.transform.position.x - RoomWidth;
+        float x = FirstRoom.transform.position.x - 1.5f*RoomWidth;
         float y = FirstRoom.transform.position.y;
         _LM.ExitFromTavern = Instantiate(TavernExitInst, new Vector3(x, y, 0f), new Quaternion());
+
+        //Фон
+        float IncX = BGInst.GetComponent<BoxCollider2D>().size.x;
+        y -= RoomHeight / 2;
+        Instantiate(BGInst, new Vector3(x, y, 0f), new Quaternion());
+        for (int i=0; i<LevelManager.MaxRoomsOnFloor; i++)
+        {
+            x += IncX;
+            Instantiate(BGInst, new Vector3(x, y, 0f), new Quaternion());
+        }
+
     }
 
 }

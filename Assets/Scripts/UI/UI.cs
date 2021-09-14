@@ -488,10 +488,10 @@ public class UI : MonoBehaviour
         if(_MoneyManager.is_enough_money_for_purchase(AddButton.Price.get_Price()))
         {
             LM.add_room(AddButton.Floor);
-            AddButton.Price.increase_rent();
             AddButton.check_num_of_rooms();
             _MoneyManager.decrease_money(AddButton.Price.get_Price());
-            //_MoneyManager.increase_TotalRent(AddButton.Price.get_Rent());
+            _MoneyManager.increase_TotalRent(AddButton.Price.get_Rent());
+            AddButton.Price.increase_rent();
         } 
         else
         {

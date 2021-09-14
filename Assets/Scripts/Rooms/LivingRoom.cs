@@ -178,6 +178,7 @@ public class LivingRoom : Room
             StartCleaning(LevelManager.PlayerCleanMod);
             _PC.set_PlayerState(PlayerController.StateOfPlayer.Cleaning);
             _CancelCleanB.SetActive(true);
+            _PC.transform.SetPositionAndRotation(transform.position, new Quaternion());
             return;
         }
     }

@@ -8,6 +8,8 @@ public abstract class BaseWorker : BaseCharacter
     protected float Speed = 1f;
     protected float WorkSpeedMod = 1f;
     protected int Salary = LevelManager.BASE_SALARY;
+    protected Vector3 PlaceInWorkerRoom; 
+    protected Quaternion DirInWorkerRoom = new Quaternion(0, 180, 0, 1); //Направление взгляда в собственной комнате 
 
     protected void Start()
     {
@@ -25,6 +27,7 @@ public abstract class BaseWorker : BaseCharacter
                 move_to_GlobalTarget();
                 if (isGlobalTargetReached == true)
                 {
+                    transform.SetPositionAndRotation(PlaceInWorkerRoom, DirInWorkerRoom);
                     reset_state();
                 }
                 break;

@@ -25,6 +25,7 @@ public class Housemaid : BaseWorker
     {
         if(_RoomForWork.Clean >= _RoomForWork.MaxClean)
         {
+            _Animator.SetBool("IsCleaning", false);
             change_state(StateOfCharacter.MoveToWorkerRoom, CurRoom);
             _RoomForWork = null;
             return;
@@ -32,6 +33,8 @@ public class Housemaid : BaseWorker
         if (_RoomForWork.RoomState != LivingRoom.StateOfLivingRoom.Cleaning)
         {
             _RoomForWork.StartCleaning(WorkSpeedMod);
+            transform.SetPositionAndRotation(_RoomForWork.transform.position, new Quaternion());
+            _Animator.SetBool("IsCleaning", true);
         } 
     }
 
@@ -44,6 +47,8 @@ public class Housemaid : BaseWorker
         this.CurRoom = RoomForWorker;
         RoomForWorker.add_worker(this);
         change_state(StateOfCharacter.MoveToWorkerRoom, RoomForWorker);
+        PlaceInWorkerRoom = RoomForWorker.transform.position;
+        DirInWorkerRoom = new Quaternion(0, 0, 0, 1);
     }
 
 }

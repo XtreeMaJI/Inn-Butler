@@ -13,6 +13,7 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
     public Food FoodInst;
     public Wine WineInst;
     private Vector3 _PlaceForFood;
+    private Vector3 _PlaceForCook;
 
     //Текущая и конечная степень готовки
     private float _CurCookDegree;
@@ -39,6 +40,8 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
 
         _BaseCookSpeed = _MaxCookDegree / (LevelManager.DayLength / 24);
         _BaseCookSpeed /= 9; //Базовая скорость готовки - 9 часов
+
+        _PlaceForCook = transform.Find("PosForWork").position;
     }
 
     private void Update()
@@ -63,10 +66,15 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
 
     public void press_CookFoodB()
     {
+        if(_PC == null)
+        {
+            return;
+        }
         disable_buttons();
         _StopCookFoodB.SetActive(true);
-        _PC?.set_PlayerState(PlayerController.StateOfPlayer.Cooking);
+        _PC.set_PlayerState(PlayerController.StateOfPlayer.Cooking);
         start_cooking(LevelManager.PlayerCookMod);
+        _PC.transform.SetPositionAndRotation(_PlaceForCook, new Quaternion());
     }
 
     public void press_StopCookFoodB()

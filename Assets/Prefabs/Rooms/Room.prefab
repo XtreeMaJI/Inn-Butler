@@ -393,10 +393,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -281694911
-  m_SortingLayer: -2
+  m_SortingLayerID: 122434177
+  m_SortingLayer: -7
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7dece91e31c65c4409d7c25af371e4fe, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d744d24f71c522d498d2a746ab40f956, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -454,6 +454,7 @@ MonoBehaviour:
   MaxFun: 0
   Vis: {fileID: 0}
   RoomType: 0
+  RoomPayment: 0
 --- !u!61 &6745830937764156568
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1126,7 +1127,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b45fc0bd5d3368b4e88252ea8fb344a3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 248b5d0bfd82b9c4e9a7e2f778e0387a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

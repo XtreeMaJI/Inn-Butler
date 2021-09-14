@@ -24,7 +24,6 @@ public class Servant : BaseWorker
         _MoneyManager.increase_TotalSalary(Salary);
     }
 
-
     protected override void do_work()
     {
         switch(ServantType)
@@ -35,6 +34,7 @@ public class Servant : BaseWorker
                 _RoomForWork.refill_Food();
                 _RoomForWork = null;
                 change_state(StateOfCharacter.MoveToWorkerRoom, CurRoom);
+                _Animator.SetBool("IsCarrying", false);
                 break;
             case TypeOfServant.Bar:
                 Destroy(_Carryable.gameObject);
@@ -42,6 +42,7 @@ public class Servant : BaseWorker
                 _RoomForWork.refill_Fun();
                 _RoomForWork = null;
                 change_state(StateOfCharacter.MoveToWorkerRoom, CurRoom);
+                _Animator.SetBool("IsCarrying", false);
                 break;
             case TypeOfServant.Reception:
                 if((CurRoom as Reception).is_VisitorBuf_empty() == false)
@@ -50,7 +51,6 @@ public class Servant : BaseWorker
                 }
                 break;
         }
-        
     }
 
     protected override void find_work()
@@ -64,6 +64,7 @@ public class Servant : BaseWorker
                     {
                         _Carryable = (CurRoom as Kitchen).FinishedDish.grab(_PosForCarry);
                         change_state(StateOfCharacter.MoveToPlaceForWork, _RoomForWork);
+                        _Animator.SetBool("IsCarrying", true);
                     }
                     break;
                 }
@@ -78,6 +79,7 @@ public class Servant : BaseWorker
                     {
                         _Carryable.grab(_PosForCarry);
                         change_state(StateOfCharacter.MoveToPlaceForWork, _RoomForWork);
+                        _Animator.SetBool("IsCarrying", true);
                     }
                     break;
                 }
@@ -85,7 +87,6 @@ public class Servant : BaseWorker
                 _Scheduler.delete_room_from_WineQueue(_RoomForWork);
                 break;
             case TypeOfServant.Reception:
-                transform.SetPositionAndRotation((CurRoom as Reception).PosForWork, new Quaternion());
                 change_state(StateOfCharacter.Working);
                 break;
         }
@@ -104,6 +105,7 @@ public class Servant : BaseWorker
             CurRoom = RoomForWorker;
             RoomForWorker.add_worker(this);
             change_state(StateOfCharacter.MoveToWorkerRoom, RoomForWorker);
+            PlaceInWorkerRoom = RoomForWorker.transform.Find("PosForServant").position;
         }
         if (RoomForWorker.GetComponent<Reception>() != null)
         {
@@ -111,6 +113,7 @@ public class Servant : BaseWorker
             CurRoom = RoomForWorker;
             RoomForWorker.add_worker(this);
             change_state(StateOfCharacter.MoveToWorkerRoom, RoomForWorker);
+            PlaceInWorkerRoom = RoomForWorker.transform.Find("PlaceForWork").position;
         }
         if (RoomForWorker.GetComponent<Bar>() != null)
         {
@@ -118,6 +121,7 @@ public class Servant : BaseWorker
             CurRoom = RoomForWorker;
             RoomForWorker.add_worker(this);
             change_state(StateOfCharacter.MoveToWorkerRoom, RoomForWorker);
+            PlaceInWorkerRoom = RoomForWorker.transform.Find("PlaceForWork").position;
         }
     }
 

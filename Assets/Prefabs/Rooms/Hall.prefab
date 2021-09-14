@@ -568,10 +568,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -281694911
-  m_SortingLayer: -2
+  m_SortingLayerID: 122434177
+  m_SortingLayer: -7
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: fe9516b2ba1c7d549a48296f89fc39fa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f55703f3867b7a84396f27ca32a06a0e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -655,6 +655,7 @@ MonoBehaviour:
   MaxFun: 0
   Vis: {fileID: 0}
   RoomType: 0
+  RoomPayment: 0
 --- !u!1 &4159357586581822589
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,7 +1127,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b45fc0bd5d3368b4e88252ea8fb344a3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 248b5d0bfd82b9c4e9a7e2f778e0387a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

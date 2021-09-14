@@ -36,6 +36,8 @@ public class BaseCharacter : BaseType
 
     protected BaseType _ExitPos;
 
+    protected Animator _Animator;
+
     protected override void Awake()
     {
         base.Awake();
@@ -50,11 +52,14 @@ public class BaseCharacter : BaseType
         isGlobalTargetReached = false;
 
         _ExitPos = Object.FindObjectOfType<TavernExit>();
+
+        _Animator = GetComponent<Animator>();
     }
 
     protected void move_to_GlobalTarget()
     {
-        if(LocalTarget == null)
+        _Animator.SetFloat("Speed", 0);
+        if (LocalTarget == null)
         {
             find_LocalTarget();
         }
@@ -82,7 +87,9 @@ public class BaseCharacter : BaseType
             if (LocalTarget.transform.position.x - transform.position.x != 0)
             {
                 float dir = (LocalTarget.transform.position.x - transform.position.x) / Mathf.Abs(LocalTarget.transform.position.x - transform.position.x);
-                _rb.transform.Translate(new Vector3(dir * _Speed * Time.deltaTime, 0f, 0f));
+                _Animator.SetFloat("Speed", Mathf.Abs(dir));
+                set_dir(dir);
+                _rb.transform.Translate(new Vector3(Mathf.Abs(dir) * _Speed * Time.deltaTime, 0f, 0f));
             }
         }
     }
@@ -90,6 +97,7 @@ public class BaseCharacter : BaseType
     protected void follow_GlobalTarget()
     {
         find_LocalTarget();
+        _Animator.SetFloat("Speed", 0);
         if (is_local_target_reached())
         {
             if (LocalTarget == GlobalTarget)
@@ -112,12 +120,14 @@ public class BaseCharacter : BaseType
         }
         else
         {
-            float dir = 0f;
+            float dir = 0f;       
             if (LocalTarget.transform.position.x - transform.position.x != 0)
             {
                 dir = (LocalTarget.transform.position.x - transform.position.x) / Mathf.Abs(LocalTarget.transform.position.x - transform.position.x);
             }
-            _rb.transform.Translate(new Vector3(dir * _Speed * Time.deltaTime, 0f, 0f));
+            _Animator.SetFloat("Speed", Mathf.Abs(dir));
+            set_dir(dir);
+            _rb.transform.Translate(new Vector3(Mathf.Abs(dir) * _Speed * Time.deltaTime, 0f, 0f));
         }
     }
 
@@ -141,10 +151,11 @@ public class BaseCharacter : BaseType
     Stairs find_closest_stair(string dir)
     {
         List<Stairs> StairList = _LM.get_all_stairs_on_floor(CurFloor);
+        List<Stairs> StairListCopy = new List<Stairs>(StairList);
         Stairs ClosestStair = null;
         if (dir == "up")
         {
-            foreach (Stairs stairs in StairList)
+            foreach (Stairs stairs in StairListCopy)
             {
                 if (stairs.UpperStair == null)
                 {
@@ -154,7 +165,7 @@ public class BaseCharacter : BaseType
         }
         else if (dir == "down")
         {
-            foreach (Stairs stairs in StairList)
+            foreach (Stairs stairs in StairListCopy)
             {
                 if (stairs.LowerStair == null)
                 {
@@ -213,5 +224,19 @@ public class BaseCharacter : BaseType
         }
         return false;
     }
+
+    private void set_dir(float dir)
+    {
+        if(dir > 0)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+            return;
+        }else if (dir < 0)
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+            return;
+        }
+    }
+
 
 }

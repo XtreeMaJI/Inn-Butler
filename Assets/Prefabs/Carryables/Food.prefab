@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5407330054785819533
+--- !u!1 &8589611072103434735
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,38 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3817138047519748774}
-  - component: {fileID: 1949639674971446035}
-  - component: {fileID: 1674401179128423555}
-  - component: {fileID: 3028626748312479595}
+  - component: {fileID: 2701013584932856468}
+  - component: {fileID: 3162453581543628260}
+  - component: {fileID: 6580630789892208429}
+  - component: {fileID: -8829782212796882222}
   m_Layer: 0
-  m_Name: Wine
-  m_TagString: Untagged
+  m_Name: Food
+  m_TagString: Clickable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3817138047519748774
+--- !u!4 &2701013584932856468
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5407330054785819533}
+  m_GameObject: {fileID: 8589611072103434735}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.3555, y: -1.9538, z: -2.0726318}
-  m_LocalScale: {x: 0.13553068, y: 0.9477666, z: 1}
+  m_LocalPosition: {x: 0.5291374, y: -1.8901054, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &1949639674971446035
+--- !u!212 &3162453581543628260
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5407330054785819533}
+  m_GameObject: {fileID: 8589611072103434735}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -69,55 +69,55 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -281694911
-  m_SortingLayer: -2
-  m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 2ffe2c1f798e4b241b01d2cf88299beb, type: 3}
-  m_Color: {r: 0.8962264, g: 0.17332679, b: 0.7563436, a: 1}
+  m_SortingLayerID: -1064963401
+  m_SortingLayer: -5
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: edfc2b660b080f04aa30856a9a813d70, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 0.1}
+  m_Size: {x: 0.1, y: 0.1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &1674401179128423555
+--- !u!61 &6580630789892208429
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5407330054785819533}
+  m_GameObject: {fileID: 8589611072103434735}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.035857677}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 0.1}
-    newSize: {x: 1, y: 0.1}
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 0.08, y: 0.08}
+    newSize: {x: 0.1, y: 0.1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.1}
+  m_Size: {x: 0.1, y: 0.071715355}
   m_EdgeRadius: 0
---- !u!114 &3028626748312479595
+--- !u!114 &-8829782212796882222
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5407330054785819533}
+  m_GameObject: {fileID: 8589611072103434735}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 740a3c30e6b97e84982d98992c411465, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c0084a017c52394da7394bb6eba3be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
