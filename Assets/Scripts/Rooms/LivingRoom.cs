@@ -13,18 +13,17 @@ public class LivingRoom : Room
         Cleaning = 3
     }
 
-    private GameObject _InfoPanel;
-    private Image _CleanBar;
-    private Image _FoodBar;
-    private Image _FunBar;
+    public LivingRoomInfoPanel InfoPanel;
 
     private float _BaseCleanSpeed; //Скорость уборки, равная уборке спальной за час игрового времени
     private float _CleanSpeedMod; //Модификатор скорости уборки
 
-    public StateOfLivingRoom RoomState { get; set; }
+    public StateOfLivingRoom RoomState { get; private set; }
 
     private bool _IsFoodRequested = false; //Добавлена ли комната в очередь на еду
     private bool _IsWineRequested = false; //Добавлена ли комната в очередь на вино
+
+    private GameObject _InnerWall;
 
     protected void Start()
     {
@@ -33,10 +32,11 @@ public class LivingRoom : Room
         _CancelCleanB = _Can.transform.Find("CancelCleanB").gameObject;
         _GiveItemB = _Can.transform.Find("GiveItemB").gameObject;
 
-        init_InfoPanel();
+        _InnerWall = transform.Find("InnerWall").gameObject;
+
         init_bars();
 
-        RoomState = StateOfLivingRoom.Empty;
+        change_state(StateOfLivingRoom.Empty);
 
         _BaseCleanSpeed = LevelManager.BaseMaxClean / (LevelManager.DayLength / 24);
     }
@@ -45,14 +45,6 @@ public class LivingRoom : Room
     {
         decrease_bars();
         increase_Clean();
-    }
-
-    private void init_InfoPanel()
-    {
-        _InfoPanel = _Can.transform.Find("InfoPanel").gameObject;
-        _CleanBar = _InfoPanel.transform.Find("CleanBar").GetComponent<Image>();
-        _FoodBar = _InfoPanel.transform.Find("FoodBar").GetComponent<Image>();
-        _FunBar = _InfoPanel.transform.Find("FunBar").GetComponent<Image>();
     }
 
     //Заселить посетителя
@@ -70,6 +62,8 @@ public class LivingRoom : Room
         toggle_InfoPanel();
         disable_buttons();
         enable_buttons();
+        InfoPanel.set_VisSprite(NewVisitor.GetComponent<Image>().sprite);
+        InfoPanel.set_DaysBeforeLeave(Vis.NumOfDaysBeforeLeave);
     }
 
     public void free_the_room()
@@ -77,13 +71,14 @@ public class LivingRoom : Room
         Vis = null;
         toggle_InfoPanel();
         handle_visitor_leave_room();
-        RoomState = StateOfLivingRoom.Empty;
+        change_state(StateOfLivingRoom.Empty);
         _Scheduler.delete_room_from_FoodQueue(this);
         _Scheduler.delete_room_from_WineQueue(this);
         _IsFoodRequested = false;
         _IsWineRequested = false;
         Food = MaxFood;
         Fun = MaxFun;
+        InfoPanel.set_VisSprite();
     }
 
     protected new void OnTriggerEnter2D(Collider2D collision)
@@ -127,7 +122,7 @@ public class LivingRoom : Room
             {
                 float OldClean = Clean;
                 Clean -= (MaxClean / LevelManager.DayLength) * Time.deltaTime;
-                _CleanBar.fillAmount = Clean / MaxClean;
+                InfoPanel.set_CleanBarFill(Clean / MaxClean);
             }
 
             if (RoomType != LevelManager.TypeOfRoom.Bedroom &&
@@ -135,13 +130,13 @@ public class LivingRoom : Room
                Food >= 0f)
             {
                 Food -= (MaxFood / LevelManager.DayLength) * Time.deltaTime;
-                _FoodBar.fillAmount = Food / MaxFood;
+                InfoPanel.set_FoodBarFill(Food / MaxFood);
             }
 
             if (RoomType == LevelManager.TypeOfRoom.TraderRoom && Fun >= 0f)
             {
                 Fun -= (MaxFun / LevelManager.DayLength) * Time.deltaTime;
-                _FunBar.fillAmount = Fun / MaxFun;
+                InfoPanel.set_FunBarFill(Fun / MaxFun);
             }
 
             if (_IsFoodRequested == false &&
@@ -161,13 +156,13 @@ public class LivingRoom : Room
 
     private void toggle_InfoPanel()
     {
-        if(_InfoPanel.activeSelf)
+        if(InfoPanel.gameObject.activeSelf)
         {
-            _InfoPanel.SetActive(false);
+            InfoPanel.gameObject.SetActive(false);
         }
         else
         {
-            _InfoPanel.SetActive(true);
+            InfoPanel.gameObject.SetActive(true);
         }
     }
 
@@ -185,13 +180,13 @@ public class LivingRoom : Room
 
     public void StartCleaning(float NewCleaningSpeedMod)
     {
-        RoomState = StateOfLivingRoom.Cleaning;
+        change_state(StateOfLivingRoom.Cleaning);
         _CleanSpeedMod = NewCleaningSpeedMod;
     }
 
     public void StopCleaning()
     {
-        RoomState = StateOfLivingRoom.Empty;
+        change_state(StateOfLivingRoom.Empty);
         _Scheduler.delete_room_from_CleanQueue(this);
         if (_PC != null)
         {
@@ -207,7 +202,7 @@ public class LivingRoom : Room
         if(RoomState == StateOfLivingRoom.Cleaning)
         {
             Clean += _CleanSpeedMod * _BaseCleanSpeed * Time.deltaTime;
-            _CleanBar.fillAmount = Clean / MaxClean;
+            InfoPanel.set_CleanBarFill(Clean / MaxClean);
         }
         if(RoomState == StateOfLivingRoom.Cleaning && Clean >= MaxClean)
         {
@@ -242,7 +237,7 @@ public class LivingRoom : Room
     public void refill_Food()
     {
         Food += LevelManager.AMOUNT_OF_FOOD_REFILLED_BY_DISH;
-        _FoodBar.fillAmount = Food / MaxFood;
+        InfoPanel.set_FoodBarFill(Food / MaxFood);
         _IsFoodRequested = false;
         _Scheduler.delete_room_from_FoodQueue(this);
     }
@@ -250,7 +245,7 @@ public class LivingRoom : Room
     public void refill_Fun()
     {
         Fun += LevelManager.AMOUNT_OF_FUN_REFILLED_BY_WINE;
-        _FunBar.fillAmount = Fun / MaxFun;
+        InfoPanel.set_FunBarFill(Fun / MaxFun);
         _IsWineRequested = false;
         _Scheduler.delete_room_from_WineQueue(this);
     }
@@ -317,6 +312,16 @@ public class LivingRoom : Room
         disable_buttons();
         enable_buttons();
         request_cleaning();
+    }
+
+    public void change_state(StateOfLivingRoom NewState)
+    {
+        RoomState = NewState;
+        _InnerWall.SetActive(false);
+        if(NewState == StateOfLivingRoom.VisitorInside)
+        {
+            _InnerWall.SetActive(true);
+        }
     }
 
 }

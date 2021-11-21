@@ -20,6 +20,8 @@ public class Bar : BaseWorkerRoom, IRoomWithCarryables
 
     private Servant _Servant = null;
 
+    public BarInfoPanel InfoPanel;
+
     private void Start()
     {
         _BuyWineB = _Can.transform.Find("BuyWineB").gameObject;
@@ -118,6 +120,7 @@ public class Bar : BaseWorkerRoom, IRoomWithCarryables
         {
             _Servant = (NewWorker as Servant);
             StartCoroutine("renew_wine_supplies");
+            InfoPanel.activate_ServantImage();
         }
     }
 

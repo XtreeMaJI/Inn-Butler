@@ -16,7 +16,8 @@ public class BaseCharacter : BaseType
         MoveToPlaceForWork = 7,
         Working = 8,
         ReturnToPay = 9, //Возвращение в комнату, чтобы расплатиться и уйти
-        LeaveTavern = 10
+        LeaveTavern = 10,
+        StayInHall = 11
     }
 
     public Room CurRoom { get; set; } //Комната, к которой привязан персонаж(рабочая или жилая)
@@ -38,6 +39,10 @@ public class BaseCharacter : BaseType
 
     protected Animator _Animator;
 
+    private string _BaseSortingLayer;
+
+    private SpriteRenderer _SpriteRender;
+
     protected override void Awake()
     {
         base.Awake();
@@ -54,6 +59,9 @@ public class BaseCharacter : BaseType
         _ExitPos = Object.FindObjectOfType<TavernExit>();
 
         _Animator = GetComponent<Animator>();
+
+        _SpriteRender = GetComponent<SpriteRenderer>();
+        _BaseSortingLayer = _SpriteRender.sortingLayerName;
     }
 
     protected void move_to_GlobalTarget()
@@ -206,6 +214,13 @@ public class BaseCharacter : BaseType
         GlobalTarget = NewGlobalTarget;
         LocalTarget = null;
         isGlobalTargetReached = false;
+
+        _SpriteRender.sortingLayerName = _BaseSortingLayer;
+        if (NewState == StateOfCharacter.Idle || NewState == StateOfCharacter.Working || 
+            NewState == StateOfCharacter.StayInHall)
+        {
+            _SpriteRender.sortingLayerName = "InsideRoom";
+        }
     }
 
     protected void reset_state()
@@ -213,6 +228,7 @@ public class BaseCharacter : BaseType
         GlobalTarget = null;
         LocalTarget = null;
         CharacterState = StateOfCharacter.Idle;
+        _SpriteRender.sortingLayerName = "InsideRoom";
     }
 
     private bool is_GlobalTarget_in_range(float range)

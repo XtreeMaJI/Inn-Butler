@@ -18,7 +18,7 @@ TagManager:
   - Player
   - Characters
   - PlayerBlocker
-  - 
+  - RoomUI
   - 
   - 
   - 
@@ -54,6 +54,9 @@ TagManager:
     locked: 0
   - name: InnerWall
     uniqueID: 3728046527
+    locked: 0
+  - name: RoomUI
+    uniqueID: 3104580127
     locked: 0
   - name: Worker
     uniqueID: 2612700653

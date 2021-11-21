@@ -11,6 +11,8 @@ public class Reception : BaseWorkerRoom
     protected GameObject _TakeKeysB; //Кнопка сопровождения посетителя к комнате
     protected GameObject _RejectB; //Кнопка отказа посетителю
 
+    public ReceptionInfoPanel InfoPanel;
+
     private void Start()
     {
         _TakeKeysB = _Can.transform.Find("TakeKeysB").gameObject;
@@ -36,7 +38,7 @@ public class Reception : BaseWorkerRoom
 
     public void reject_to_visitor()
     {
-        Destroy(_VisitorBuf.gameObject);
+        _VisitorBuf.leave_tavern();
         disable_buttons();
         enable_buttons();
     }
@@ -61,6 +63,7 @@ public class Reception : BaseWorkerRoom
         if(NewWorker != null && _Servant == null)
         {
             _Servant = (NewWorker as Servant);
+            InfoPanel.activate_ServantImage();
             disable_buttons();
             enable_buttons();
         }
@@ -76,11 +79,11 @@ public class Reception : BaseWorkerRoom
     }
 
     //Работает для посетителя в VisitorBuf
-    public void check_visitor_in_suitable_room()
+    public bool try_check_visitor_in_suitable_room()
     {
         if(_VisitorBuf == null)
         {
-            return;
+            return false;
         }
 
         List<Room> RoomList = _LM.get_RoomList_copy();
@@ -94,9 +97,10 @@ public class Reception : BaseWorkerRoom
                 _VisitorBuf = null;
                 _LM.VisInQueue = null;
                 _LM.create_visitor_if_possible();
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     protected override void enable_buttons()
@@ -132,5 +136,9 @@ public class Reception : BaseWorkerRoom
         _AddStaffB.SetActive(false);
     }
 
+    public void clear_VisitorBuf()
+    {
+        _VisitorBuf = null;
+    }
 
 }

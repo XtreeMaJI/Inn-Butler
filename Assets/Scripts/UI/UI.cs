@@ -154,7 +154,7 @@ public class UI : MonoBehaviour
     {
         disable_AddStaffPanel_panels();
         enable_AddStaffPanel_buttons();
-        hide_buttons_with_existing_workers(CurrentRoomType);
+        disable_buttons_with_existing_workers(CurrentRoomType);
         if (CurrentRoomType == LevelManager.TypeOfRoom.Kitchen)
         {
             _AddStaffKitchenPanel.SetActive(true);
@@ -180,41 +180,41 @@ public class UI : MonoBehaviour
         }
     }
 
-    //Спрятать на AddStaffPanel кнопку, если работник уже был нанят
-    private void hide_buttons_with_existing_workers(LevelManager.TypeOfRoom RoomType)
+    //Отключить на AddStaffPanel кнопку, если работник уже был нанят и включить шкалу опыта
+    private void disable_buttons_with_existing_workers(LevelManager.TypeOfRoom RoomType)
     {
-        switch(RoomType)
+        BaseWorkerRoom BaseWorkerRoomBuf = _RoomBuf.GetComponent<BaseWorkerRoom>();
+        switch (RoomType)
         {
             case LevelManager.TypeOfRoom.StaffRoom:
-                if ((_RoomBuf as BaseWorkerRoom).is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Housemaid))
+                if (BaseWorkerRoomBuf.is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Housemaid))
                 {
                     _AddStaffStaffRoomPanel.transform.Find("HireHousemaidB").gameObject.SetActive(false);
                 }
                 break;
             case LevelManager.TypeOfRoom.Kitchen:
-                if ((_RoomBuf as BaseWorkerRoom).is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Cook))
+                if (BaseWorkerRoomBuf.is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Cook))
                 {
                     _AddStaffKitchenPanel.transform.Find("HireCookB").gameObject.SetActive(false);
                 }
-                if ((_RoomBuf as BaseWorkerRoom).is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Servant))
+                if (BaseWorkerRoomBuf.is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Servant))
                 {
                     _AddStaffKitchenPanel.transform.Find("HireServantB").gameObject.SetActive(false);
                 }
                 break;
             case LevelManager.TypeOfRoom.Bar:
-                if ((_RoomBuf as BaseWorkerRoom).is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Servant))
+                if (BaseWorkerRoomBuf.is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Servant))
                 {
                     _AddStaffBarPanel.transform.Find("HireServantB").gameObject.SetActive(false);
                 }
                 break;
             case LevelManager.TypeOfRoom.Reception:
-                if ((_RoomBuf as BaseWorkerRoom).is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Servant))
+                if (BaseWorkerRoomBuf.is_worker_on_this_pos_exist(LevelManager.TypeOfWorker.Servant))
                 {
                     _AddStaffReceptionPanel.transform.Find("HireServantB").gameObject.SetActive(false);
                 }
                 break;
         }
-        
     }
 
     public void handle_AddStaffPanel_button_press()

@@ -6,6 +6,8 @@ public class StaffRoom : BaseWorkerRoom
 {
     private Housemaid _Housemaid = null;
 
+    public StaffRoomInfoPanel InfoPanel;
+
     public override bool is_worker_on_this_pos_exist(LevelManager.TypeOfWorker WorkerType)
     {
         if (_Housemaid != null)
@@ -25,6 +27,7 @@ public class StaffRoom : BaseWorkerRoom
         if (NewWorker.GetComponent<Housemaid>() != null
            && _Housemaid == null)
         {
+            InfoPanel.activate_HousemaidImage();
             _Housemaid = (NewWorker as Housemaid);
         }
     }

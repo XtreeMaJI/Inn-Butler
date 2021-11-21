@@ -29,6 +29,8 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
 
     public Food FinishedDish = null;
 
+    public KitchenInfoPanel InfoPanel;
+
     private void Start()
     {
         _CookFoodB = _Can.transform.Find("CookFoodB").gameObject;
@@ -61,6 +63,7 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
                 _CurCookDegree = 0f;
                 stop_cooking();
             }
+            InfoPanel.set_FoodBar(_CurCookDegree);
         }
     }
 
@@ -139,11 +142,13 @@ public class Kitchen : BaseWorkerRoom, IRoomWithCarryables
             _Cook == null)
         {
             _Cook = (NewWorker as Cook);
+            InfoPanel.activate_CookImage();
         }
         if (NewWorker.GetComponent<Servant>() != null &&
             _Servant == null)
         {
             _Servant = (NewWorker as Servant);
+            InfoPanel.activate_ServantImage();
         }
     }
 

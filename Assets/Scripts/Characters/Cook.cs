@@ -10,6 +10,7 @@ public class Cook : BaseWorker
         {
             change_state(StateOfCharacter.Idle);
             _Animator.SetBool("IsCooking", false);
+            increase_XP();
             return;
         }
         (CurRoom as Kitchen).start_cooking(WorkSpeedMod); 
@@ -36,4 +37,15 @@ public class Cook : BaseWorker
         PlaceInWorkerRoom = RoomForWorker.transform.Find("PosForWork").position;
         DirInWorkerRoom = new Quaternion(0, 0, 0, 1);
     }
+
+    protected override void change_XP_on_UI()
+    {
+        if (Level + 1 >= XPForLevel.Length)
+        {
+            (CurRoom as Kitchen).InfoPanel.set_CookXP(Level, CurXP, 0);
+            return;
+        }
+        (CurRoom as Kitchen).InfoPanel.set_CookXP(Level, CurXP, XPForLevel[Level+1]);
+    }
+
 }

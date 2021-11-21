@@ -64,7 +64,7 @@ public class LevelManager : MonoBehaviour
     public const int SecondTownTavernMaxRep = 12000;
     public const int ThirdTownTavernMaxRep = 7000;
     public const int FourthTownTavernMaxRep = 6000;
-    public const float DayLength = 10f; //Длина дня в секундах
+    public const float DayLength = 60f; //Длина дня в секундах
     public const int NumOfTaverns = 5;
     public const float BaseMaxClean = 1f; //Показатель максимально возможной чистоты в самой дешёвой комнате
     public const float PlayerCleanMod = 1f;
@@ -126,6 +126,7 @@ public class LevelManager : MonoBehaviour
     public Servant ServantInst;
 
     private List<Room> _RoomList;
+    private List<Hall> _HallList = new List<Hall>();
 
     private int _DailyAmountOfVisitors; //Максимальное количество посетителей, которые могут прийти за день
     public Visitor VisInQueue; //Посетитель у ресепшена
@@ -434,6 +435,16 @@ public class LevelManager : MonoBehaviour
     {
         List<Room> RoomListCopy = new List<Room>(_RoomList);
         return RoomListCopy;
+    }
+
+    public List<Hall> get_HallList()
+    {
+        return _HallList;
+    }
+
+    public void add_to_HallList(Hall newHall)
+    {
+        _HallList.Add(newHall);
     }
 
 }

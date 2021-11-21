@@ -22,6 +22,7 @@ public class Servant : BaseWorker
     {
         _PosForCarry = transform.Find("PosForCarry");
         _MoneyManager.increase_TotalSalary(Salary);
+        change_XP_on_UI();
     }
 
     protected override void do_work()
@@ -31,23 +32,38 @@ public class Servant : BaseWorker
             case TypeOfServant.Kitchen:
                 Destroy(_Carryable.gameObject);
                 _Carryable = null;
-                _RoomForWork.refill_Food();
-                _RoomForWork = null;
+                if(_RoomForWork != null)
+                {
+                    _RoomForWork.refill_Food();
+                    _RoomForWork = null;
+                }
                 change_state(StateOfCharacter.MoveToWorkerRoom, CurRoom);
                 _Animator.SetBool("IsCarrying", false);
+                increase_XP();
                 break;
             case TypeOfServant.Bar:
                 Destroy(_Carryable.gameObject);
                 _Carryable = null;
-                _RoomForWork.refill_Fun();
-                _RoomForWork = null;
+                if (_RoomForWork != null)
+                {
+                    _RoomForWork.refill_Fun();
+                    _RoomForWork = null;
+                }
                 change_state(StateOfCharacter.MoveToWorkerRoom, CurRoom);
                 _Animator.SetBool("IsCarrying", false);
+                increase_XP();
                 break;
             case TypeOfServant.Reception:
                 if((CurRoom as Reception).is_VisitorBuf_empty() == false)
                 {
-                    (CurRoom as Reception).check_visitor_in_suitable_room();
+                    if((CurRoom as Reception).try_check_visitor_in_suitable_room())
+                    {
+                        increase_XP();
+                    }
+                    else
+                    {
+                        (CurRoom as Reception).reject_to_visitor();
+                    }
                 }
                 break;
         }
@@ -123,6 +139,37 @@ public class Servant : BaseWorker
             change_state(StateOfCharacter.MoveToWorkerRoom, RoomForWorker);
             PlaceInWorkerRoom = RoomForWorker.transform.Find("PlaceForWork").position;
         }
+    }
+
+    protected override void change_XP_on_UI()
+    {
+        switch(ServantType)
+        {
+            case TypeOfServant.Kitchen:
+                if (Level + 1 >= XPForLevel.Length)
+                {
+                    (CurRoom as Kitchen).InfoPanel.set_ServantXP(Level, CurXP, 0);
+                    return;
+                }
+                (CurRoom as Kitchen).InfoPanel.set_ServantXP(Level, CurXP, XPForLevel[Level + 1]);
+                break;
+            case TypeOfServant.Reception:
+                if (Level + 1 >= XPForLevel.Length)
+                {
+                    (CurRoom as Reception).InfoPanel.set_ServantXP(Level, CurXP, 0);
+                    return;
+                }
+                (CurRoom as Reception).InfoPanel.set_ServantXP(Level, CurXP, XPForLevel[Level + 1]);
+                break;
+            case TypeOfServant.Bar:
+                if (Level + 1 >= XPForLevel.Length)
+                {
+                    (CurRoom as Bar).InfoPanel.set_ServantXP(Level, CurXP, 0);
+                    return;
+                }
+                (CurRoom as Bar).InfoPanel.set_ServantXP(Level, CurXP, XPForLevel[Level + 1]);
+                break;
+        }      
     }
 
 }
