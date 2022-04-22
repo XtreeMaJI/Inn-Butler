@@ -64,7 +64,7 @@ public class LevelManager : MonoBehaviour
     public const int SecondTownTavernMaxRep = 12000;
     public const int ThirdTownTavernMaxRep = 7000;
     public const int FourthTownTavernMaxRep = 6000;
-    public const float DayLength = 60f; //Длина дня в секундах
+    public const float DayLength = 15f; //Длина дня в секундах
     public const int NumOfTaverns = 5;
     public const float BaseMaxClean = 1f; //Показатель максимально возможной чистоты в самой дешёвой комнате
     public const float PlayerCleanMod = 1f;
@@ -88,6 +88,8 @@ public class LevelManager : MonoBehaviour
     public const int HOUSEMAID_PRICE = 10;
     public const int SERVANT_PRICE = 30;
     public const int WINE_PRICE = 5;
+    public const int WIN_MONEY_AMOUNT = 20000;
+    public const int WIN_REP_AMOUNT = 12000;
 
     public UI ui;
 

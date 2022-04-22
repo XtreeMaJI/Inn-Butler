@@ -15,6 +15,8 @@ public class UI : MonoBehaviour
     private GameObject _BuildPanel;
     private GameObject _UpgradePanel;
     private GameObject _AddStaffPanel;
+    private GameObject _GameInfoPanel;
+    private GameObject _PausePanel;
 
     //Панели для разных комнат на StaffPanel
     private GameObject _AddStaffKitchenPanel;
@@ -49,6 +51,8 @@ public class UI : MonoBehaviour
         _MainPanel = transform.Find("MainPanel").gameObject;
         _BuildPanel = transform.Find("BuildPanel").gameObject;
         _UpgradePanel = transform.Find("UpgradePanel").gameObject;
+        _GameInfoPanel = transform.Find("GameInfoPanel").gameObject;
+        _PausePanel = transform.Find("PausePanel").gameObject;
         ContentPanel = _BuildPanel.transform.Find("Content").gameObject;
 
         FirstAddB = ContentPanel.transform.Find("FirstAddButton").gameObject;
@@ -215,6 +219,18 @@ public class UI : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    public void open_GameInfoPanel()
+    {
+        disable_all_panels();
+        _GameInfoPanel.SetActive(true);
+    }
+
+    public void open_PausePanel()
+    {
+        disable_all_panels();
+        _PausePanel.SetActive(true);
     }
 
     public void handle_AddStaffPanel_button_press()
@@ -481,6 +497,8 @@ public class UI : MonoBehaviour
         _BuildPanel.SetActive(false);
         _UpgradePanel.SetActive(false);
         _AddStaffPanel.SetActive(false);
+        _GameInfoPanel.SetActive(false);
+        _PausePanel.SetActive(false);
     }
 
     public void handle_build_panel_button_press(AddRoomButton AddButton)

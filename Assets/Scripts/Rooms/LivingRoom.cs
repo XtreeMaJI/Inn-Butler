@@ -25,6 +25,16 @@ public class LivingRoom : Room
 
     private GameObject _InnerWall;
 
+    //Флаги того, что шкала, в ходе уменьшения, достигла нуля. После пополнения шкалы, флаги восстанавливаются в false
+    private bool _IsFoodHitZero = false;
+    private bool _IsCleanHitZero = false;
+    private bool _IsFunHitZero = false;
+
+    public float Happiness = 3f; //Уровень счастья
+    public float HappinessPenalty = 1f; //Штраф по счастью, если шкала потребностей достигнет нуля
+    public float HoursToDecreaseHappiness = 12f; //Количество часов, за которое счастье уменьшится на 1
+    public float MaxHappiness = 5f;
+
     protected void Start()
     {
         _CheckInB = _Can.transform.Find("CheckInB").gameObject;
@@ -64,6 +74,7 @@ public class LivingRoom : Room
         enable_buttons();
         InfoPanel.set_VisSprite(NewVisitor.GetComponent<Image>().sprite);
         InfoPanel.set_DaysBeforeLeave(Vis.NumOfDaysBeforeLeave);
+        InfoPanel.set_HappinessBarFill(Happiness/MaxHappiness);
     }
 
     public void free_the_room()
@@ -149,6 +160,31 @@ public class LivingRoom : Room
                 MaxFun - Fun >= LevelManager.BASE_AMOUNT_OF_WINE_FOR_LIVING_ROOM / 2)
             {
                 request_wine();
+            }
+
+            //Если какая-то из шкал потребностей достигла нуля, то уменьшается шкала счастья
+            if (Food <= 0f && _IsFoodHitZero == false)
+            {
+                _IsFoodHitZero = true;
+                Happiness -= HappinessPenalty;
+            }
+
+            if (Clean <= 0f && _IsCleanHitZero == false)
+            {
+                _IsCleanHitZero = true;
+                Happiness -= HappinessPenalty;
+            }
+
+            if (Fun <= 0f && _IsFunHitZero == false)
+            {
+                _IsFunHitZero = true;
+                Happiness -= HappinessPenalty;
+            }
+
+            if (_IsFunHitZero || _IsFoodHitZero || _IsCleanHitZero)
+            {
+                Happiness -= (1f / HoursToDecreaseHappiness) * (24f / LevelManager.DayLength) * Time.deltaTime;
+                InfoPanel.set_HappinessBarFill(Happiness / MaxHappiness);
             }
 
         }

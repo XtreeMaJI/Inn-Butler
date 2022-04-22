@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoneyManager : MonoBehaviour
 {
     public int CurrentMoney;
-    private MoneyAmountUI _MoneyUI;
+    private MoneyAmountUI[] _MoneyUI;
     private TimeCounter _TimeCounter;
 
     private int TotalRentPayment = 0; //Сколько игрок платит за аренду каждый день
@@ -13,9 +13,9 @@ public class MoneyManager : MonoBehaviour
 
     private void Start()
     {
-        _MoneyUI = Object.FindObjectOfType<MoneyAmountUI>();
+        _MoneyUI = FindObjectsOfType<MoneyAmountUI>();
         CurrentMoney = 0;
-        increase_money(150);
+        increase_money(1000);
         _TimeCounter = FindObjectOfType<TimeCounter>();
         _TimeCounter.DayStarter += handle_day_start;
     }
@@ -23,13 +23,19 @@ public class MoneyManager : MonoBehaviour
     public void increase_money(int NumOfMoney)
     {
         CurrentMoney += NumOfMoney;
-        _MoneyUI.set_MoneyCount(CurrentMoney);
+        foreach (MoneyAmountUI MoneyUIElem in _MoneyUI)
+        {
+            MoneyUIElem.set_MoneyCount(CurrentMoney);
+        }
     }
 
     public void decrease_money(int NumOfMoney)
     {
         CurrentMoney -= NumOfMoney;
-        _MoneyUI.set_MoneyCount(CurrentMoney);
+        foreach (MoneyAmountUI MoneyUIElem in _MoneyUI)
+        {
+            MoneyUIElem.set_MoneyCount(CurrentMoney);
+        }
     }
 
     public bool is_enough_money_for_purchase(int price)
